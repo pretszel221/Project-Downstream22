@@ -25,7 +25,7 @@ SPDX-FileCopyrightText: 2025 taydeo <td12233a@gmail.com>
 SPDX-License-Identifier: MIT
 -->
 
-<p align="center"> <img alt="Space Station 14" width="880" height="400" src="https://github.com/Project-Downstream/Project-Downstream/tree/master/Resources/Textures/Logo/logo2.png" /></p>
+<p align="center"> <img alt="Space Station 14" <img width="880" height="400" alt="logo2" src="https://github.com/user-attachments/assets/f2d58fe6-c1ff-4c36-b6e4-7f1824006966" /> /></p>
 
 This is a fork from the primary repo for Goob Station 14 which was then forked from Funky Station (now we are using it!). To prevent people forking RobustToolbox, a "content" pack is loaded by the client and server. This content pack contains everything needed to play the game on one specific server.
 
