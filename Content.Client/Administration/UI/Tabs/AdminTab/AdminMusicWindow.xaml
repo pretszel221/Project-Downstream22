@@ -1,0 +1,27 @@
+<DefaultWindow
+    xmlns="https://spacestation14.io"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    MinSize="420 180"
+    Title="{Loc admin-music-window-title}">
+    <BoxContainer Orientation="Vertical" SeparationOverride="4" Margin="8">
+        <BoxContainer Orientation="Horizontal" SeparationOverride="8">
+            <Label Text="{Loc admin-music-window-mode}" MinWidth="70"/>
+            <OptionButton Name="ModeOption" HorizontalExpand="True"/>
+        </BoxContainer>
+
+        <BoxContainer Orientation="Horizontal" SeparationOverride="8">
+            <Label Text="{Loc admin-music-window-track}" MinWidth="70"/>
+            <LineEdit Name="PathLine" HorizontalExpand="True" PlaceHolder="/Audio/... .ogg"/>
+        </BoxContainer>
+
+        <BoxContainer Orientation="Horizontal" SeparationOverride="8">
+            <Label Text="{Loc admin-music-window-volume}" MinWidth="70"/>
+            <SpinBox Name="VolumeSpin" Value="0" MinWidth="100"/>
+            <Label Text="{Loc admin-music-window-range}"/>
+            <SpinBox Name="RangeSpin" Value="12" MinWidth="100"/>
+        </BoxContainer>
+
+        <Label Name="HintLabel"/>
+        <Button Name="PlayButton" Text="{Loc admin-music-window-play}" HorizontalAlignment="Right"/>
+    </BoxContainer>
+</DefaultWindow>

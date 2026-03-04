@@ -35,12 +35,29 @@ public class GlobalSoundEvent : EntityEventArgs
 }
 
 /// <summary>
-/// Intended for admin music. Can be disabled by the <seealso cref="CCVars.AdminSoundsEnabled"/> cvar.
+/// Intended for admin music. Can be disabled by the <seealso cref="CCVars.AdminMusicEnabled"/> cvar.
 /// </summary>
 [Serializable, NetSerializable]
 public sealed class AdminSoundEvent : GlobalSoundEvent
 {
-    public AdminSoundEvent(ResolvedSoundSpecifier specifier, AudioParams? audioParams = null) : base(specifier, audioParams){}
+    public string? PlayedBy;
+    public string? TrackLabel;
+    public bool LocalPlayback;
+    public float Range;
+
+    public AdminSoundEvent(
+        ResolvedSoundSpecifier specifier,
+        AudioParams? audioParams = null,
+        string? playedBy = null,
+        string? trackLabel = null,
+        bool localPlayback = false,
+        float range = 0f) : base(specifier, audioParams)
+    {
+        PlayedBy = playedBy;
+        TrackLabel = trackLabel;
+        LocalPlayback = localPlayback;
+        Range = range;
+    }
 }
 
 /// <summary>

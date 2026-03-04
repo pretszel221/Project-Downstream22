@@ -33,9 +33,17 @@ public sealed class ServerGlobalSoundSystem : SharedGlobalSoundSystem
         _conHost.UnregisterCommand("playglobalsound");
     }
 
-    public void PlayAdminGlobal(Filter playerFilter, ResolvedSoundSpecifier specifier, AudioParams? audioParams = null, bool replay = true)
+    public void PlayAdminGlobal(
+        Filter playerFilter,
+        ResolvedSoundSpecifier specifier,
+        AudioParams? audioParams = null,
+        bool replay = true,
+        string? playedBy = null,
+        string? trackLabel = null,
+        bool localPlayback = false,
+        float range = 0f)
     {
-        var msg = new AdminSoundEvent(specifier, audioParams);
+        var msg = new AdminSoundEvent(specifier, audioParams, playedBy, trackLabel, localPlayback, range);
         RaiseNetworkEvent(msg, playerFilter, recordReplay: replay);
     }
 

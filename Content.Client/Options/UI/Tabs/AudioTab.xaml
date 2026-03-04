@@ -37,7 +37,8 @@ SPDX-License-Identifier: MIT
                 <CheckBox Name="LobbyMusicCheckBox" Text="{Loc 'ui-options-lobby-music'}" />
                 <CheckBox Name="RestartSoundsCheckBox" Text="{Loc 'ui-options-restart-sounds'}" />
                 <CheckBox Name="EventMusicCheckBox" Text="{Loc 'ui-options-event-music'}" />
-                <CheckBox Name="AdminSoundsCheckBox" Text="{Loc 'ui-options-admin-sounds'}" />
+                <CheckBox Name="AdminMusicCheckBox" Text="{Loc 'ui-options-admin-music'}" />
+                <ui:OptionSlider Name="SliderVolumeAdminMusic" Title="{Loc 'ui-options-admin-music-volume'}" />
                 <CheckBox Name="BwoinkSoundCheckBox" Text="{Loc 'ui-options-bwoink-sound'}" />
             </BoxContainer>
         </BoxContainer>

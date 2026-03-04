@@ -98,7 +98,8 @@ ui-options-ambience-max-sounds = Ambience simultaneous sounds:
 ui-options-lobby-music = Lobby & Round-end Music
 ui-options-restart-sounds = Round Restart Sounds
 ui-options-event-music = Event Music
-ui-options-admin-sounds = Play Admin Sounds
+ui-options-admin-music = Play Admin Music
+ui-options-admin-music-volume = Admin music volume:
 ui-options-bwoink-sound = Play AHelp Notification Sound
 ui-options-volume-label = Volume
 

@@ -1,0 +1,14 @@
+play-admin-music-command-description = Plays admin music globally or within a local tile range.
+play-admin-music-command-help = playadminmusic <global|local> <path> [volume-db:-40..20] [range:1..40]
+play-admin-music-command-invalid-mode = Invalid mode "{$mode}". Use global or local.
+play-admin-music-command-invalid-path = Invalid music input "{$path}". Must be an in-repo .ogg path beginning with '/'.
+play-admin-music-command-missing-path = Could not find music file "{$path}" in resources.
+play-admin-music-command-volume-parse = Invalid volume offset of {$volume} specified.
+play-admin-music-command-range-parse = Invalid local range of {$range} specified.
+play-admin-music-command-volume-range = Volume offset must be between {$min} and {$max}.
+play-admin-music-command-range-limits = Local range must be between {$min} and {$max}.
+play-admin-music-command-local-requires-body = Local playback requires your admin session to be attached to an in-game entity.
+play-admin-music-command-arg-mode = <global|local>
+play-admin-music-command-arg-path = <path>
+play-admin-music-command-arg-volume = [volume-db]
+play-admin-music-command-arg-range = [range]

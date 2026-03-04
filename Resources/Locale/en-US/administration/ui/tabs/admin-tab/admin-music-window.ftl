@@ -1,0 +1,9 @@
+admin-music-window-title = Admin Music Player
+admin-music-window-mode = Mode:
+admin-music-window-mode-global = Global
+admin-music-window-mode-local = Local
+admin-music-window-track = Track:
+admin-music-window-volume = Volume:
+admin-music-window-range = Range:
+admin-music-window-play = Play
+admin-music-window-hint = Use resource paths (for example /Audio/Misc/...). Local mode uses tile range around your entity.
