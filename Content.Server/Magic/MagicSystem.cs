@@ -42,9 +42,12 @@ using Content.Shared.Magic;
 using Content.Shared.Magic.Events;
 using Content.Shared.Mind;
 using Content.Shared.Revolutionary.Components;
+using Content.Shared.Roles;
 using Content.Shared.Tag;
+using Robust.Server.Player;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
 
 namespace Content.Server.Magic;
 
