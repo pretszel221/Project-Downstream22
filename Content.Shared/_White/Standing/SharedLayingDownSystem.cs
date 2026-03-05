@@ -104,6 +104,9 @@ public abstract class SharedLayingDownSystem : EntitySystem
 
     private void OnRefreshMovementSpeed(EntityUid uid, LayingDownComponent component, RefreshMovementSpeedModifiersEvent args)
     {
+        if (HasComp<KnockedDownComponent>(uid))
+            return;
+
         if (_standing.IsDown(uid))
             args.ModifySpeed(component.SpeedModify, component.SpeedModify);
         else

@@ -343,7 +343,7 @@ public abstract partial class SharedStunSystem : EntitySystem
         if (!TryComp(uid, out TransformComponent? xformComp))
             return false;
 
-        var standingLayer = (int) CollisionGroup.HighImpassable;
+        var standingLayer = StandingStateSystem.StandingCollisionLayer;
         var intersecting = _physics.GetEntitiesIntersectingBody(uid, standingLayer, false);
 
         if (intersecting.Count == 0)
