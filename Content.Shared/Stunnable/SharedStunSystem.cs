@@ -352,23 +352,12 @@ public abstract partial class SharedStunSystem : EntitySystem
 
         if (_nextToggleKnockdownAt.TryGetValue(uid, out var nextToggle) && _timing.CurTime < nextToggle)
             return;
+		}
 
         _nextToggleKnockdownAt[uid] = _timing.CurTime + TimeSpan.FromSeconds(0.2);
 
         if (!HasComp<CrawlerComponent>(uid))
             return;
-
-        if (!TryComp(uid, out KnockedDownComponent? knocked))
-        {
-            EnsureComp<KnockedDownComponent>(uid);
-            knocked = Comp<KnockedDownComponent>(uid);
-            knocked.AutoStand = false;
-            if (TryComp(uid, out CrawlerComponent? crawler))
-                knocked.NextUpdate = _timing.CurTime + crawler.DefaultKnockedDuration;
-            Dirty(uid, knocked);
-            return;
-        }
-
         var stand = !knocked.DoAfterId.HasValue;
         if (stand && _nextStandAttemptAt.TryGetValue(uid, out var nextStandAttempt) && _timing.CurTime < nextStandAttempt)
             return;
