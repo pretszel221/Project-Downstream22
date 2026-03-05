@@ -45,6 +45,7 @@
             Janitor: [ 1, 1 ]
             Musician: [ 1, 1 ]
             StationEngineer: [ 2, 3 ]
+            AtmosphericTechnician: [ 1, 1 ]
             Scientist: [ 1, 1 ]
             Passenger: [ -1, -1 ]
 

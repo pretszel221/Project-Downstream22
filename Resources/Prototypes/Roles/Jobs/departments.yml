@@ -135,7 +135,7 @@
   description: department-Engineering-description
   color: "#EFB341"
   roles:
-# - AtmosphericTechnician - Funky, Goodbye forever Atmos :wave:
+  - AtmosphericTechnician
   - ChiefEngineer
   - StationEngineer
   - TechnicalAssistant

@@ -51,17 +51,13 @@
   - Maintenance
   - Engineering
   - External
-  - Atmospherics
   alternateTitles:
   - StationEngineerMaintenanceTechnician
-  - StationEngineerFirefighter
   - StationEngineerMechanic
   - StationEngineerElectrician
-  - StationEngineerAtmosphericTechnician
   - StationEngineerEngineOperator
   - StationEngineerEmergencyDamageControlTechnician
   - StationEngineerEVATechnician
-  - StationEngineerLifeSupportTechnician
 
 - type: startingGear
   id: StationEngineerGear
@@ -95,15 +91,3 @@
 - type: jobAlternateTitle
   id: StationEngineerEVATechnician
   name: job-name-alt-engineer-6
-
-- type: jobAlternateTitle
-  id: StationEngineerFirefighter
-  name: job-name-alt-atmos-1
-
-- type: jobAlternateTitle
-  id: StationEngineerAtmosphericTechnician
-  name: job-name-alt-atmos-2
-
-- type: jobAlternateTitle
-  id: StationEngineerLifeSupportTechnician
-  name: job-name-alt-atmos-3

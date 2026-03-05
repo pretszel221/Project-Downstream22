@@ -70,6 +70,7 @@
             Musician: [ 1, 1 ]
             #engineering - 8-12
             StationEngineer: [ 8, 8 ]
+            AtmosphericTechnician: [ 1, 1 ]
             TechnicalAssistant: [ 4, 4 ]
             #medical - 9-13
             Chemist: [ 2, 2 ]

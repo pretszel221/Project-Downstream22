@@ -30,6 +30,7 @@
           #engineering
           ChiefEngineer: [ 1, 1 ]
           StationEngineer: [ 16, 16] # jesus fuck
+          AtmosphericTechnician: [ 1, 1 ]
           #medical
           ChiefMedicalOfficer: [ 1, 1 ]
           Chemist: [ 1, 1 ]

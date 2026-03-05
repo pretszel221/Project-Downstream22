@@ -74,6 +74,7 @@
             #engineering
             ChiefEngineer: [ 1, 1 ]
             StationEngineer: [ 8, 8 ]
+            AtmosphericTechnician: [ 1, 1 ]
             TechnicalAssistant: [ 4, 4 ]
             #medical
             ChiefMedicalOfficer: [ 1, 1 ]
