@@ -185,11 +185,7 @@ public sealed class SlipperySystem : EntitySystem
 
         _stun.TryParalyze(other, component.SlipData.ParalyzeTime, true);
 
-        if (TryComp(other, out KnockedDownComponent? knocked))
-        {
-            knocked.FrictionModifier = Math.Min(knocked.FrictionModifier, SlipKnockdownFrictionModifier);
-            Dirty(other, knocked);
-        }
+        _stun.TrySetKnockedDownFrictionModifier(other, SlipKnockdownFrictionModifier);
 
         // Preventing from playing the slip sound when you are already knocked down.
         if (playSound)

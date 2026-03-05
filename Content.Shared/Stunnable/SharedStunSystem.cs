@@ -68,6 +68,7 @@ using Robust.Shared.Timing;
 using Robust.Shared.Configuration;
 using Robust.Shared.Input.Binding;
 using Robust.Shared.Map;
+using Robust.Shared.Maths;
 using Robust.Shared.Player;
 using Robust.Shared.Serialization;
 
@@ -466,6 +467,19 @@ public abstract partial class SharedStunSystem : EntitySystem
     public bool TryCrawling(EntityUid uid, bool refresh = true, bool autoStand = true)
     {
         return TryCrawling(uid, null, refresh, autoStand);
+    }
+
+    public void TrySetKnockedDownFrictionModifier(EntityUid uid, float frictionModifier, KnockedDownComponent? knocked = null)
+    {
+        if (!Resolve(uid, ref knocked, false))
+            return;
+
+        var newModifier = Math.Min(knocked.FrictionModifier, frictionModifier);
+        if (MathHelper.CloseTo(knocked.FrictionModifier, newModifier))
+            return;
+
+        knocked.FrictionModifier = newModifier;
+        Dirty(uid, knocked);
     }
 
     public bool TryCrawling(EntityUid uid, TimeSpan? time, bool refresh = true, bool autoStand = true)
