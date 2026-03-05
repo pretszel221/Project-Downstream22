@@ -195,10 +195,7 @@ public abstract partial class SharedStunSystem : EntitySystem
                 continue;
 
             if (!TryStanding(uid, knocked) && knocked.NextUpdate <= _timing.CurTime)
-            {
-                knocked.NextUpdate = _timing.CurTime + AutoStandRetryDelay;
-                Dirty(uid, knocked);
-            }
+                ScheduleAutoStandRetry(uid, knocked);
         }
     }
 
@@ -254,11 +251,25 @@ public abstract partial class SharedStunSystem : EntitySystem
         _standingState.Stand(uid);
     }
 
+    private void ScheduleAutoStandRetry(EntityUid uid, KnockedDownComponent component)
+    {
+        var nextUpdate = _timing.CurTime + AutoStandRetryDelay;
+        if (component.NextUpdate >= nextUpdate)
+            return;
+
+        component.NextUpdate = nextUpdate;
+        Dirty(uid, component);
+    }
 
     private void RefreshKnockedMovement(EntityUid uid, KnockedDownComponent component)
     {
         var ev = new KnockedDownRefreshEvent();
         RaiseLocalEvent(uid, ref ev);
+
+        if (MathHelper.CloseTo(component.SpeedModifier, ev.SpeedModifier) &&
+            MathHelper.CloseTo(component.FrictionModifier, ev.FrictionModifier))
+            return;
+
         component.SpeedModifier = ev.SpeedModifier;
         component.FrictionModifier = ev.FrictionModifier;
         Dirty(uid, component);
@@ -402,8 +413,7 @@ public abstract partial class SharedStunSystem : EntitySystem
             if (popupOnBlocked)
                 _popup.PopupClient(Loc.GetString("knockdown-component-stand-no-room"), uid, uid, PopupType.SmallCaution);
 
-            knocked.NextUpdate = _timing.CurTime + AutoStandRetryDelay;
-            Dirty(uid, knocked);
+            ScheduleAutoStandRetry(uid, knocked);
             return false;
         }
 
@@ -446,8 +456,7 @@ public abstract partial class SharedStunSystem : EntitySystem
         if (IntersectingStandingColliders(uid))
         {
             _popup.PopupClient(Loc.GetString("knockdown-component-stand-no-room"), uid, uid, PopupType.SmallCaution);
-            knocked.NextUpdate = _timing.CurTime + AutoStandRetryDelay;
-            Dirty(uid, knocked);
+            ScheduleAutoStandRetry(uid, knocked);
             return;
         }
 
