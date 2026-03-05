@@ -112,6 +112,16 @@
   #editorHidden: false
   #weight: 120
 
+
+- type: department
+  id: CentralCommand
+  name: department-CentralCommand
+  description: department-CentralCommand-description
+  color: "#0c344d"
+  roles: []
+  editorHidden: true
+  weight: 120
+
 - type: department
   id: Command
   name: department-Command
