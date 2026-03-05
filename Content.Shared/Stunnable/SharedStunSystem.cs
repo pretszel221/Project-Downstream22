@@ -370,10 +370,10 @@ public abstract partial class SharedStunSystem : EntitySystem
         if (!TryComp(uid, out TransformComponent? xformComp))
             return false;
 
-        var standingLayer = StandingStateSystem.StandingCollisionLayer;
+        var standingLayers = (int) (CollisionGroup.MidImpassable | CollisionGroup.HighImpassable);
         var fixtureQuery = GetEntityQuery<FixturesComponent>();
         var xformQuery = GetEntityQuery<TransformComponent>();
-        var ourAabb = _entityLookup.GetAABBNoContainer(uid, xformComp.LocalPosition, xformComp.LocalRotation);
+        var ourAabb = _entityLookup.GetAABBNoContainer(uid, xformComp.MapPosition.Position, xformComp.WorldRotation);
 
         var intersecting = _entityLookup.GetEntitiesIntersecting(xformComp.MapID, ourAabb, LookupFlags.Static | LookupFlags.Dynamic);
 
@@ -382,10 +382,10 @@ public abstract partial class SharedStunSystem : EntitySystem
             if (!fixtureQuery.TryGetComponent(ent, out var fixtures) || !xformQuery.TryComp(ent, out var xformOther))
                 continue;
 
-            var xform = new Transform(xformOther.LocalPosition, xformOther.LocalRotation);
+            var xform = new Transform(xformOther.MapPosition.Position, xformOther.WorldRotation);
             foreach (var fixture in fixtures.Fixtures.Values)
             {
-                if (!fixture.Hard || (fixture.CollisionMask & standingLayer) != standingLayer)
+                if (!fixture.Hard || (fixture.CollisionMask & standingLayers) == 0)
                     continue;
 
                 for (var i = 0; i < fixture.Shape.ChildCount; i++)
