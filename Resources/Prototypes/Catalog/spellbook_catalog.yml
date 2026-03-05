@@ -118,6 +118,20 @@
   - !type:ListingLimitedStockCondition
     stock: 1
 
+
+- type: listing
+  id: SpellbookPolymorphRod
+  name: spellbook-polymorph-rod-name
+  description: spellbook-polymorph-rod-desc
+  productAction: ActionPolymorphWizardRod
+  cost:
+    WizCoin: 2
+  categories:
+  - SpellbookUtility
+  conditions:
+  - !type:ListingLimitedStockCondition
+    stock: 1
+
 - type: listing
   id: SpellbookBlink
   name: spellbook-blink-name
