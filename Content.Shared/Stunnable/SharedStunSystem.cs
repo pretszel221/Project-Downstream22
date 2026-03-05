@@ -78,6 +78,7 @@ namespace Content.Shared.Stunnable;
 public abstract partial class SharedStunSystem : EntitySystem
 {
     private readonly Dictionary<EntityUid, TimeSpan> _nextToggleKnockdownAt = new();
+    private static readonly TimeSpan AutoStandRetryDelay = TimeSpan.FromSeconds(0.25);
 
     [Dependency] private readonly ActionBlockerSystem _blocker = default!;
     [Dependency] private readonly SharedBroadphaseSystem _broadphase = default!;
@@ -193,7 +194,11 @@ public abstract partial class SharedStunSystem : EntitySystem
             if (!knocked.AutoStand || knocked.DoAfterId != null || knocked.NextUpdate > _timing.CurTime)
                 continue;
 
-            TryStanding(uid, knocked);
+            if (!TryStanding(uid, knocked) && knocked.NextUpdate <= _timing.CurTime)
+            {
+                knocked.NextUpdate = _timing.CurTime + AutoStandRetryDelay;
+                Dirty(uid, knocked);
+            }
         }
     }
 
@@ -242,6 +247,7 @@ public abstract partial class SharedStunSystem : EntitySystem
 
     private void OnKnockShutdown(EntityUid uid, KnockedDownComponent component, ComponentShutdown args)
     {
+        _nextToggleKnockdownAt.Remove(uid);
         component.FrictionModifier = 1f;
         component.SpeedModifier = 1f;
         component.DoAfterId = null;
@@ -305,8 +311,14 @@ public abstract partial class SharedStunSystem : EntitySystem
 
     private void HandleToggleKnockdown(ICommonSession? session)
     {
-        if (session?.AttachedEntity is not { } uid || !Exists(uid) || !_cfg.GetCVar(CCVars.MovementCrawling))
+        if (session?.AttachedEntity is not { } uid || !_cfg.GetCVar(CCVars.MovementCrawling))
             return;
+
+        if (!Exists(uid))
+        {
+            _nextToggleKnockdownAt.Remove(uid);
+            return;
+        }
 
         if (_nextToggleKnockdownAt.TryGetValue(uid, out var nextToggle) && _timing.CurTime < nextToggle)
             return;
@@ -390,6 +402,8 @@ public abstract partial class SharedStunSystem : EntitySystem
             if (popupOnBlocked)
                 _popup.PopupClient(Loc.GetString("knockdown-component-stand-no-room"), uid, uid, PopupType.SmallCaution);
 
+            knocked.NextUpdate = _timing.CurTime + AutoStandRetryDelay;
+            Dirty(uid, knocked);
             return false;
         }
 
@@ -432,6 +446,7 @@ public abstract partial class SharedStunSystem : EntitySystem
         if (IntersectingStandingColliders(uid))
         {
             _popup.PopupClient(Loc.GetString("knockdown-component-stand-no-room"), uid, uid, PopupType.SmallCaution);
+            knocked.NextUpdate = _timing.CurTime + AutoStandRetryDelay;
             Dirty(uid, knocked);
             return;
         }
