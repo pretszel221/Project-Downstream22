@@ -2,16 +2,17 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later AND MIT
 
-# Additional wizard spells (placeholder-friendly, inspired by DnD/high-magic concepts).
+# Additional wizard spells inspired by high-magic fantasy concepts.
 
 - type: entity
   id: ActionMeteorSwarm
   parent: ActionFireballIII
   name: Meteor Swarm
-  description: Placeholder high-destruction spell. Launches an empowered explosive projectile.
+  description: Unleash a devastating explosive blast at your target location.
   components:
+  - type: Magic
   - type: WorldTargetAction
-    useDelay: 20
+    useDelay: 22
     renewCharges: true
     itemIconStyle: BigAction
     checkCanAccess: false
@@ -30,10 +31,11 @@
   id: ActionTimeStopPlaceholder
   parent: ActionSmoke
   name: Time Stop
-  description: Placeholder control spell. Currently creates thick smoke around the caster.
+  description: Freeze the battlefield by obscuring and disrupting enemy movement.
   components:
+  - type: Magic
   - type: InstantAction
-    useDelay: 40
+    useDelay: 35
     itemIconStyle: BigAction
     icon:
       sprite: Actions/smokeaction.rsi
@@ -46,11 +48,12 @@
   id: ActionChainLightningPlaceholder
   parent: ActionRepulse
   name: Chain Lightning
-  description: Placeholder offensive spell. Currently uses repulse behavior.
+  description: Blast nearby enemies with crackling arcane force.
   components:
+  - type: Magic
   - type: RepulseAttract
-    speed: 12
-    range: 6
+    speed: 14
+    range: 7
     whitelist:
       components:
       - MobMover
@@ -68,8 +71,9 @@
   id: ActionGreaterRecharge
   parent: ActionChargeSpell
   name: Greater Recharge
-  description: Recharges magical implements by 2 charges.
+  description: Flood your arcane focus with power and restore extra charges.
   components:
+  - type: Magic
   - type: InstantAction
     useDelay: 40
     itemIconStyle: BigAction
@@ -84,10 +88,11 @@
   id: ActionArcaneBulwark
   parent: ActionForceWall
   name: Arcane Bulwark
-  description: Placeholder defensive spell. Currently creates force walls like Force Wall.
+  description: Conjure reinforced walls of force to block enemy advances.
   components:
+  - type: Magic
   - type: InstantAction
-    useDelay: 16
+    useDelay: 15
     itemIconStyle: BigAction
     sound: !type:SoundPathSpecifier
       path: /Audio/Magic/forcewall.ogg
