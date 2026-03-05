@@ -116,7 +116,7 @@ public sealed class MagicSystem : SharedMagicSystem
         Changeling,
     }
 
-    private void OnTrueChaosSpell(ref TrueChaosSpellEvent ev)
+    private void OnTrueChaosSpell(TrueChaosSpellEvent ev)
     {
         if (ev.Handled)
             return;
