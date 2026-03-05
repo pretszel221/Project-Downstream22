@@ -91,17 +91,3 @@
 - type: jobAlternateTitle
   id: StationEngineerEVATechnician
   name: job-name-alt-engineer-6
-
-# Legacy compatibility titles kept for existing character preferences.
-# These are intentionally not listed under StationEngineer.alternateTitles.
-- type: jobAlternateTitle
-  id: StationEngineerFirefighter
-  name: job-name-alt-atmos-1
-
-- type: jobAlternateTitle
-  id: StationEngineerAtmosphericTechnician
-  name: job-name-alt-atmos-2
-
-- type: jobAlternateTitle
-  id: StationEngineerLifeSupportTechnician
-  name: job-name-alt-atmos-3

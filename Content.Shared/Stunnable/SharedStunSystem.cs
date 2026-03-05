@@ -80,7 +80,8 @@ public abstract partial class SharedStunSystem : EntitySystem
     private readonly Dictionary<EntityUid, TimeSpan> _nextToggleKnockdownAt = new();
     private readonly Dictionary<EntityUid, TimeSpan> _nextStandAttemptAt = new();
     private static readonly TimeSpan AutoStandRetryDelay = TimeSpan.FromSeconds(0.25);
-    private static readonly TimeSpan ManualStandAttemptCooldown = TimeSpan.FromSeconds(0.75);
+    private static readonly TimeSpan ToggleKnockdownCooldown = TimeSpan.FromSeconds(0.8);
+    private static readonly TimeSpan ManualStandAttemptCooldown = TimeSpan.FromSeconds(0.8);
 
     [Dependency] private readonly ActionBlockerSystem _blocker = default!;
     [Dependency] private readonly SharedBroadphaseSystem _broadphase = default!;
@@ -349,13 +350,16 @@ public abstract partial class SharedStunSystem : EntitySystem
             return;
         }
 
+        if (!HasComp<CrawlerComponent>(uid))
+            return;
+
+        if (TryComp(uid, out KnockedDownComponent? activeKnocked) && activeKnocked.DoAfterId.HasValue)
+            return;
+
         if (_nextToggleKnockdownAt.TryGetValue(uid, out var nextToggle) && _timing.CurTime < nextToggle)
             return;
 
-        _nextToggleKnockdownAt[uid] = _timing.CurTime + TimeSpan.FromSeconds(0.2);
-
-        if (!HasComp<CrawlerComponent>(uid))
-            return;
+        _nextToggleKnockdownAt[uid] = _timing.CurTime + ToggleKnockdownCooldown;
 
         if (!TryComp(uid, out KnockedDownComponent? knocked))
         {
@@ -368,8 +372,8 @@ public abstract partial class SharedStunSystem : EntitySystem
             return;
         }
 
-        var stand = !knocked.DoAfterId.HasValue;
-        if (stand && _nextStandAttemptAt.TryGetValue(uid, out var nextStandAttempt) && _timing.CurTime < nextStandAttempt)
+        var stand = true;
+        if (_nextStandAttemptAt.TryGetValue(uid, out var nextStandAttempt) && _timing.CurTime < nextStandAttempt)
             return;
 
         if (knocked.AutoStand != stand)
@@ -378,7 +382,7 @@ public abstract partial class SharedStunSystem : EntitySystem
             Dirty(uid, knocked);
         }
 
-        if (!stand || !TryStanding(uid, knocked, popupOnBlocked: true))
+        if (!TryStanding(uid, knocked, popupOnBlocked: true))
         {
             if (knocked.DoAfterId.HasValue)
             {
@@ -387,10 +391,9 @@ public abstract partial class SharedStunSystem : EntitySystem
                 Dirty(uid, knocked);
             }
 
-            if (stand)
-                _nextStandAttemptAt[uid] = _timing.CurTime + ManualStandAttemptCooldown;
+            _nextStandAttemptAt[uid] = _timing.CurTime + ManualStandAttemptCooldown;
         }
-        else if (stand)
+        else
         {
             _nextStandAttemptAt[uid] = _timing.CurTime + ManualStandAttemptCooldown;
         }
@@ -492,31 +495,6 @@ public abstract partial class SharedStunSystem : EntitySystem
             _popup.PopupClient(Loc.GetString("knockdown-component-stand-no-room"), uid, uid, PopupType.SmallCaution);
             ScheduleAutoStandRetry(uid, knocked);
             return;
-
-        _nextToggleKnockdownAt[uid] = _timing.CurTime + TimeSpan.FromSeconds(0.2);
-
-        if (!HasComp<CrawlerComponent>(uid))
-            return;
-
-        if (!TryComp(uid, out KnockedDownComponent? knocked))
-        {
-            EnsureComp<KnockedDownComponent>(uid);
-            knocked = Comp<KnockedDownComponent>(uid);
-            knocked.AutoStand = false;
-            if (TryComp(uid, out CrawlerComponent? crawler))
-                knocked.NextUpdate = _timing.CurTime + crawler.DefaultKnockedDuration;
-            Dirty(uid, knocked);
-            return;
-        }
-
-        var stand = !knocked.DoAfterId.HasValue;
-        if (stand && _nextStandAttemptAt.TryGetValue(uid, out var nextStandAttempt) && _timing.CurTime < nextStandAttempt)
-            return;
-
-        if (knocked.AutoStand != stand)
-        {
-            knocked.AutoStand = stand;
-            Dirty(uid, knocked);
         }
 
         RemComp<KnockedDownComponent>(uid);
