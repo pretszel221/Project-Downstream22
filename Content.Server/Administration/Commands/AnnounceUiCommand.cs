@@ -13,6 +13,7 @@
 // SPDX-License-Identifier: MIT
 
 using Content.Server.Administration.UI;
+using Content.Server.Administration.Managers;
 using Content.Server.EUI;
 using Content.Shared.Administration;
 using Robust.Shared.Console;
@@ -22,6 +23,8 @@ namespace Content.Server.Administration.Commands
     [AdminCommand(AdminFlags.Moderator)]
     public sealed class AnnounceUiCommand : IConsoleCommand
     {
+        [Dependency] private readonly IAdminManager _admin = default!;
+
         public string Command => "announceui";
 
         public string Description => "Opens the announcement UI";
@@ -30,10 +33,18 @@ namespace Content.Server.Administration.Commands
 
         public void Execute(IConsoleShell shell, string argStr, string[] args)
         {
+            IoCManager.InjectDependencies(this);
+
             var player = shell.Player;
             if (player == null)
             {
                 shell.WriteLine("This does not work from the server console.");
+                return;
+            }
+
+            if (!_admin.HasAdminFlag(player, AdminFlags.Moderator))
+            {
+                shell.WriteError("You must have Moderator permissions to use this command.");
                 return;
             }
 

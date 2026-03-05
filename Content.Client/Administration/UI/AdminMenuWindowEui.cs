@@ -33,6 +33,11 @@ namespace Content.Client.Administration.UI
                 Announcement = Rope.Collapse(_window.Announcement.TextRope),
                 Announcer =  _window.Announcer.Text,
                 AnnounceType =  (AdminAnnounceType) (_window.AnnounceMethod.SelectedMetadata ?? AdminAnnounceType.Station),
+                Sound = _window.SelectedSound,
+                Color = _window.SelectedColor,
+                Font = _window.SelectedFont,
+                FontSize = _window.SelectedFontSize,
+                IncludeAnnouncementSuffix = _window.ShouldIncludeAnnouncementSuffix,
                 CloseAfter = !_window.KeepWindowOpen.Pressed,
             });
 

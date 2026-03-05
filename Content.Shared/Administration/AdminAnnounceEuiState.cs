@@ -18,6 +18,39 @@ namespace Content.Shared.Administration
         Server,
     }
 
+    public enum AdminAnnounceSound
+    {
+        Default,
+        Alert,
+        Intercept,
+        Meteors,
+        Radiation,
+        ShuttleCalled,
+        PowerOn,
+        Evil,
+        Mercenary,
+        Soviet,
+    }
+
+    public enum AdminAnnounceFont
+    {
+        Default,
+        Monospace,
+        BoxRound,
+        AnimalSilence,
+    }
+
+    public enum AdminAnnounceColor
+    {
+        Gold,
+        Purple,
+        Orange,
+        Red,
+        Cyan,
+        Blue,
+        Green,
+    }
+
     [Serializable, NetSerializable]
     public sealed class AdminAnnounceEuiState : EuiStateBase
     {
@@ -32,6 +65,11 @@ namespace Content.Shared.Administration
             public string Announcer = default!;
             public string Announcement = default!;
             public AdminAnnounceType AnnounceType;
+            public AdminAnnounceSound Sound = AdminAnnounceSound.Default;
+            public AdminAnnounceFont Font = AdminAnnounceFont.Default;
+            public AdminAnnounceColor Color = AdminAnnounceColor.Gold;
+            public int FontSize = 12;
+            public bool IncludeAnnouncementSuffix = true;
         }
     }
 }
