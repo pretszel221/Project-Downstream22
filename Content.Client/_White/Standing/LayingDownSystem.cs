@@ -17,6 +17,9 @@ namespace Content.Client._White.Standing;
 
 public sealed class LayingDownSystem : SharedLayingDownSystem
 {
+    private static readonly Angle LayingLeft = Angle.FromDegrees(270);
+    private static readonly Angle LayingRight = Angle.FromDegrees(90);
+
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IEyeManager _eyeManager = default!;
     [Dependency] private readonly StandingStateSystem _standing = default!;
@@ -55,15 +58,15 @@ public sealed class LayingDownSystem : SharedLayingDownSystem
 
         var rotation = transform.LocalRotation + (_eyeManager.CurrentEye.Rotation - (transform.LocalRotation - transform.WorldRotation));
 
-        if (rotation.GetDir() is Direction.SouthEast or Direction.East or Direction.NorthEast or Direction.North)
-        {
-            rotationVisuals.HorizontalRotation = Angle.FromDegrees(270);
-            sprite.Rotation = Angle.FromDegrees(270);
-            return;
-        }
+        var target = rotation.GetDir() is Direction.SouthEast or Direction.East or Direction.NorthEast or Direction.North
+            ? LayingLeft
+            : LayingRight;
 
-        rotationVisuals.HorizontalRotation = Angle.FromDegrees(90);
-        sprite.Rotation = Angle.FromDegrees(90);
+        if (rotationVisuals.HorizontalRotation == target && sprite.Rotation == target)
+            return;
+
+        rotationVisuals.HorizontalRotation = target;
+        sprite.Rotation = target;
     }
 
     private void OnCheckAutoGetUp(CheckAutoGetUpEvent ev, EntitySessionEventArgs args)
@@ -81,12 +84,13 @@ public sealed class LayingDownSystem : SharedLayingDownSystem
 
         var rotation = transform.LocalRotation + (_eyeManager.CurrentEye.Rotation - (transform.LocalRotation - transform.WorldRotation));
 
-        if (rotation.GetDir() is Direction.SouthEast or Direction.East or Direction.NorthEast or Direction.North)
-        {
-            rotationVisuals.HorizontalRotation = Angle.FromDegrees(270);
-            return;
-        }
+        var target = rotation.GetDir() is Direction.SouthEast or Direction.East or Direction.NorthEast or Direction.North
+            ? LayingLeft
+            : LayingRight;
 
-        rotationVisuals.HorizontalRotation = Angle.FromDegrees(90);
+        if (rotationVisuals.HorizontalRotation == target)
+            return;
+
+        rotationVisuals.HorizontalRotation = target;
     }
 }

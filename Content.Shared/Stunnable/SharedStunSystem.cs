@@ -462,11 +462,13 @@ public abstract partial class SharedStunSystem : EntitySystem
 
     private void OnStandDoAfter(EntityUid uid, KnockedDownComponent knocked, ref TryStandDoAfterEvent args)
     {
+        var hadDoAfter = knocked.DoAfterId != null;
         knocked.DoAfterId = null;
 
         if (args.Cancelled || !_blocker.CanMove(uid))
         {
-            Dirty(uid, knocked);
+            if (hadDoAfter)
+                Dirty(uid, knocked);
             return;
         }
 
