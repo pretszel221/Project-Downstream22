@@ -38,4 +38,3 @@ public sealed partial class CrawlerComponent : Component
     [DataField, AutoNetworkedField]
     public float FrictionModifier = 1f;
 }
-

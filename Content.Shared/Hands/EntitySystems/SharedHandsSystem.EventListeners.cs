@@ -28,4 +28,3 @@ public abstract partial class SharedHandsSystem
         args.SpeedModifier *= (float) freeHands / totalHands;
     }
 }
-

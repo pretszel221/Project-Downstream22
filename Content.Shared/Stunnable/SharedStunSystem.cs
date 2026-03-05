@@ -80,8 +80,7 @@ public abstract partial class SharedStunSystem : EntitySystem
     private readonly Dictionary<EntityUid, TimeSpan> _nextToggleKnockdownAt = new();
     private readonly Dictionary<EntityUid, TimeSpan> _nextStandAttemptAt = new();
     private static readonly TimeSpan AutoStandRetryDelay = TimeSpan.FromSeconds(0.25);
-    private static readonly TimeSpan ToggleKnockdownCooldown = TimeSpan.FromSeconds(0.8);
-    private static readonly TimeSpan ManualStandAttemptCooldown = TimeSpan.FromSeconds(0.8);
+    private static readonly TimeSpan ManualStandAttemptCooldown = TimeSpan.FromSeconds(0.75);
 
     [Dependency] private readonly ActionBlockerSystem _blocker = default!;
     [Dependency] private readonly SharedBroadphaseSystem _broadphase = default!;
@@ -302,6 +301,7 @@ public abstract partial class SharedStunSystem : EntitySystem
     {
         if (!TryComp(uid, out KnockedDownComponent? knocked) || !args.DamageIncreased || args.DamageDelta == null)
             return;
+        }
 
         if (args.DamageDelta.GetTotal() >= component.KnockdownDamageThreshold)
         {
@@ -350,16 +350,13 @@ public abstract partial class SharedStunSystem : EntitySystem
             return;
         }
 
-        if (!HasComp<CrawlerComponent>(uid))
-            return;
-
-        if (TryComp(uid, out KnockedDownComponent? activeKnocked) && activeKnocked.DoAfterId.HasValue)
-            return;
-
         if (_nextToggleKnockdownAt.TryGetValue(uid, out var nextToggle) && _timing.CurTime < nextToggle)
             return;
 
-        _nextToggleKnockdownAt[uid] = _timing.CurTime + ToggleKnockdownCooldown;
+        _nextToggleKnockdownAt[uid] = _timing.CurTime + TimeSpan.FromSeconds(0.2);
+
+        if (!HasComp<CrawlerComponent>(uid))
+            return;
 
         if (!TryComp(uid, out KnockedDownComponent? knocked))
         {
@@ -372,8 +369,8 @@ public abstract partial class SharedStunSystem : EntitySystem
             return;
         }
 
-        var stand = true;
-        if (_nextStandAttemptAt.TryGetValue(uid, out var nextStandAttempt) && _timing.CurTime < nextStandAttempt)
+        var stand = !knocked.DoAfterId.HasValue;
+        if (stand && _nextStandAttemptAt.TryGetValue(uid, out var nextStandAttempt) && _timing.CurTime < nextStandAttempt)
             return;
 
         if (knocked.AutoStand != stand)
@@ -382,7 +379,7 @@ public abstract partial class SharedStunSystem : EntitySystem
             Dirty(uid, knocked);
         }
 
-        if (!TryStanding(uid, knocked, popupOnBlocked: true))
+        if (!stand || !TryStanding(uid, knocked, popupOnBlocked: true))
         {
             if (knocked.DoAfterId.HasValue)
             {
@@ -391,9 +388,10 @@ public abstract partial class SharedStunSystem : EntitySystem
                 Dirty(uid, knocked);
             }
 
-            _nextStandAttemptAt[uid] = _timing.CurTime + ManualStandAttemptCooldown;
+            if (stand)
+                _nextStandAttemptAt[uid] = _timing.CurTime + ManualStandAttemptCooldown;
         }
-        else
+        else if (stand)
         {
             _nextStandAttemptAt[uid] = _timing.CurTime + ManualStandAttemptCooldown;
         }
@@ -495,11 +493,10 @@ public abstract partial class SharedStunSystem : EntitySystem
             _popup.PopupClient(Loc.GetString("knockdown-component-stand-no-room"), uid, uid, PopupType.SmallCaution);
             ScheduleAutoStandRetry(uid, knocked);
             return;
-        }
+		}
 
         RemComp<KnockedDownComponent>(uid);
     }
-
     private void OnStandAttempt(EntityUid uid, KnockedDownComponent component, StandAttemptEvent args)
     {
         if (component.LifeStage <= ComponentLifeStage.Running)

@@ -13,4 +13,3 @@ public sealed partial class CCVars
     public static readonly CVarDef<bool> MovementCrawling =
         CVarDef.Create("movement.crawling", true, CVar.SERVER | CVar.REPLICATED);
 }
-
