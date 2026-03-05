@@ -38,17 +38,17 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         if (ent.Comp.HunterShuttles.Count == 0)
             return;
 
-        var shuttleProto = RobustRandom.Pick(ent.Comp.HunterShuttles);
-        if (!_gridPreloader.TryGetPreloadedGrid(shuttleProto, out var loadedShuttle))
+        var shuttleProto = ent.Comp.HunterShuttles[RobustRandom.Next(ent.Comp.HunterShuttles.Count)];
+        if (!_gridPreloader.TryGetPreloadedGrid(shuttleProto, out var loadedShuttle) || loadedShuttle is not { } shuttle)
             return;
 
         var mapUid = _map.CreateMap(out var mapId, runMapInit: false);
-        _xform.SetParent(loadedShuttle.Value, mapUid);
+        _xform.SetParent(shuttle, mapUid);
         _map.InitializeMap(mapUid);
 
-        ent.Comp.HunterShuttleGrids.Add(loadedShuttle.Value);
+        ent.Comp.HunterShuttleGrids.Add(shuttle);
 
-        var loadedEv = new RuleLoadedGridsEvent(mapId, new List<EntityUid> { loadedShuttle.Value });
+        var loadedEv = new RuleLoadedGridsEvent(mapId, new List<EntityUid> { shuttle });
         RaiseLocalEvent(ent.Owner, ref loadedEv);
     }
 
@@ -80,7 +80,8 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 
         foreach (var mind in fugitives)
         {
-            if (!_mind.TryGetControlledEntity(mind.Owner, out var entity) || entity == null)
+            var entity = mind.Comp.OwnedEntity;
+            if (entity == null)
                 continue;
 
             var alive = _mobState.IsAlive(entity.Value);
@@ -98,7 +99,8 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         var aliveHunters = 0;
         foreach (var mind in hunters)
         {
-            if (_mind.TryGetControlledEntity(mind.Owner, out var entity) && entity != null && _mobState.IsAlive(entity.Value))
+            var entity = mind.Comp.OwnedEntity;
+            if (entity != null && _mobState.IsAlive(entity.Value))
                 aliveHunters++;
         }
 
@@ -121,7 +123,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             if (!_mind.TryGetSession(mind.Owner, out var session))
                 continue;
 
-            args.AddLine(Loc.GetString("fugitive-round-end-player-entry", ("name", mind.Comp.CharacterName), ("user", session.Name)));
+            args.AddLine(Loc.GetString("fugitive-round-end-player-entry", ("name", (object)(mind.Comp.CharacterName ?? "Unknown")), ("user", session.Name)));
         }
 
         args.AddLine(Loc.GetString("fugitive-round-end-hunters-list"));
@@ -130,7 +132,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             if (!_mind.TryGetSession(mind.Owner, out var session))
                 continue;
 
-            args.AddLine(Loc.GetString("fugitive-round-end-player-entry", ("name", mind.Comp.CharacterName), ("user", session.Name)));
+            args.AddLine(Loc.GetString("fugitive-round-end-player-entry", ("name", (object)(mind.Comp.CharacterName ?? "Unknown")), ("user", session.Name)));
         }
     }
 
@@ -190,7 +192,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         var query = EntityQueryEnumerator<MindComponent>();
         while (query.MoveNext(out var uid, out var mind))
         {
-            if (!_role.MindHasRole<TRole>(uid, mind))
+            if (!_role.MindHasRole<TRole>((uid, mind), out _))
                 continue;
 
             result.Add((uid, mind));
