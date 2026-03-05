@@ -101,7 +101,7 @@ public abstract partial class SharedStunSystem : EntitySystem
         SubscribeLocalEvent<KnockedDownComponent, StandAttemptEvent>(OnStandAttempt);
         SubscribeLocalEvent<KnockedDownComponent, RefreshMovementSpeedModifiersEvent>(OnKnockedRefreshSpeed);
         SubscribeLocalEvent<CrawlerComponent, KnockedDownRefreshEvent>(OnCrawlerKnockedRefresh);
-        SubscribeLocalEvent<CrawlerComponent, global::Content.Shared.Damage.Systems.DamageableSystem.DamageChangedEvent>(OnCrawlerDamaged);
+        SubscribeLocalEvent<CrawlerComponent, global::Content.Shared.Damage.DamageChangedEvent>(OnCrawlerDamaged);
         SubscribeLocalEvent<KnockedDownComponent, TryStandDoAfterEvent>(OnStandDoAfter);
 
         CommandBinds.Builder
@@ -272,7 +272,7 @@ public abstract partial class SharedStunSystem : EntitySystem
         args.FrictionModifier *= component.FrictionModifier;
     }
 
-    private void OnCrawlerDamaged(EntityUid uid, CrawlerComponent component, ref global::Content.Shared.Damage.Systems.DamageableSystem.DamageChangedEvent args)
+    private void OnCrawlerDamaged(EntityUid uid, CrawlerComponent component, ref global::Content.Shared.Damage.DamageChangedEvent args)
     {
         if (!TryComp(uid, out KnockedDownComponent? knocked) || !args.DamageIncreased || args.DamageDelta == null)
             return;
