@@ -12,6 +12,7 @@ using Content.Shared.Mind;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Roles;
+using Robust.Server.GameObjects;
 
 namespace Content.Server.GameTicking.Rules;
 
