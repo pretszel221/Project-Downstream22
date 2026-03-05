@@ -415,6 +415,7 @@
     - FootstepSound
     - DoorBumpOpener
     - AnomalyHost
+  - type: Crawler
   - type: LayingDown # WD EDIT
   - type: Targeting # Shitmed Change
   - type: SurgeryTarget # Shitmed Change

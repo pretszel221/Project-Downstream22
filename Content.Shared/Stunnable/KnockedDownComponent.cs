@@ -8,15 +8,34 @@
 //
 // SPDX-License-Identifier: MIT
 
+using Content.Shared.DoAfter;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
-using Robust.Shared.Serialization;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 
 namespace Content.Shared.Stunnable;
 
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState, Access(typeof(SharedStunSystem))]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState(fieldDeltas: true), AutoGenerateComponentPause, Access(typeof(SharedStunSystem))]
 public sealed partial class KnockedDownComponent : Component
 {
+    [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoNetworkedField, AutoPausedField]
+    public TimeSpan NextUpdate;
+
+    [DataField, AutoNetworkedField]
+    public bool AutoStand = true;
+
+    [DataField, AutoNetworkedField]
+    public ushort? DoAfterId;
+
+    [DataField, AutoNetworkedField]
+    public float FrictionModifier = 1f;
+
+    [DataField, AutoNetworkedField]
+    public float SpeedModifier = 1f;
+
+    [DataField, AutoNetworkedField]
+    public TimeSpan GetUpDoAfter = TimeSpan.FromSeconds(1);
+
     [DataField("helpInterval"), AutoNetworkedField]
     public float HelpInterval = 1f;
 
