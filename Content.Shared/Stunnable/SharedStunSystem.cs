@@ -78,7 +78,9 @@ namespace Content.Shared.Stunnable;
 public abstract partial class SharedStunSystem : EntitySystem
 {
     private readonly Dictionary<EntityUid, TimeSpan> _nextToggleKnockdownAt = new();
+    private readonly Dictionary<EntityUid, TimeSpan> _nextNoRoomPopupAt = new();
     private static readonly TimeSpan AutoStandRetryDelay = TimeSpan.FromSeconds(0.25);
+    private static readonly TimeSpan NoRoomPopupCooldown = TimeSpan.FromSeconds(0.75);
 
     [Dependency] private readonly ActionBlockerSystem _blocker = default!;
     [Dependency] private readonly SharedBroadphaseSystem _broadphase = default!;
@@ -252,6 +254,7 @@ public abstract partial class SharedStunSystem : EntitySystem
     private void OnKnockShutdown(EntityUid uid, KnockedDownComponent component, ComponentShutdown args)
     {
         _nextToggleKnockdownAt.Remove(uid);
+        _nextNoRoomPopupAt.Remove(uid);
         component.FrictionModifier = 1f;
         component.SpeedModifier = 1f;
         component.DoAfterId = null;
@@ -342,6 +345,7 @@ public abstract partial class SharedStunSystem : EntitySystem
         if (!Exists(uid))
         {
             _nextToggleKnockdownAt.Remove(uid);
+            _nextNoRoomPopupAt.Remove(uid);
             return;
         }
 
@@ -380,6 +384,15 @@ public abstract partial class SharedStunSystem : EntitySystem
                 Dirty(uid, knocked);
             }
         }
+    }
+
+    private void PopupNoRoom(EntityUid uid)
+    {
+        if (_nextNoRoomPopupAt.TryGetValue(uid, out var nextPopup) && _timing.CurTime < nextPopup)
+            return;
+
+        _nextNoRoomPopupAt[uid] = _timing.CurTime + NoRoomPopupCooldown;
+        _popup.PopupClient(Loc.GetString("knockdown-component-stand-no-room"), uid, uid, PopupType.SmallCaution);
     }
 
     private bool IntersectingStandingColliders(EntityUid uid)
@@ -428,7 +441,7 @@ public abstract partial class SharedStunSystem : EntitySystem
         if (IntersectingStandingColliders(uid))
         {
             if (popupOnBlocked)
-                _popup.PopupClient(Loc.GetString("knockdown-component-stand-no-room"), uid, uid, PopupType.SmallCaution);
+                PopupNoRoom(uid);
 
             ScheduleAutoStandRetry(uid, knocked);
             return false;
@@ -474,7 +487,7 @@ public abstract partial class SharedStunSystem : EntitySystem
 
         if (IntersectingStandingColliders(uid))
         {
-            _popup.PopupClient(Loc.GetString("knockdown-component-stand-no-room"), uid, uid, PopupType.SmallCaution);
+            PopupNoRoom(uid);
             ScheduleAutoStandRetry(uid, knocked);
             return;
         }
