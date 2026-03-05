@@ -492,8 +492,10 @@ public abstract partial class SharedStunSystem : EntitySystem
             _popup.PopupClient(Loc.GetString("knockdown-component-stand-no-room"), uid, uid, PopupType.SmallCaution);
             ScheduleAutoStandRetry(uid, knocked);
             return;
+		}
 
-
+        RemComp<KnockedDownComponent>(uid);
+    }
     private void OnStandAttempt(EntityUid uid, KnockedDownComponent component, StandAttemptEvent args)
     {
         if (component.LifeStage <= ComponentLifeStage.Running)
