@@ -970,10 +970,9 @@ public sealed partial class AdminVerbSystem
         {
             Text = bluespaceName,
             Category = VerbCategory.Smite,
-            Icon = new SpriteSpecifier.Texture(new ("Structures/cargo_telepad.rsi/display.png")),
+            Icon = new SpriteSpecifier.Rsi(new("Structures/cargo_telepad.rsi"), "display"),
             Act = () =>
             {
-                var coords = _transformSystem.GetMapCoordinates(args.Target);
                 EntityManager.QueueDeleteEntity(args.Target);
                 Spawn("EffectFlashBluespace", Transform(args.Target).Coordinates);
             },

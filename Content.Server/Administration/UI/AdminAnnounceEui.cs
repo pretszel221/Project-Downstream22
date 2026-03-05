@@ -42,6 +42,12 @@ namespace Content.Server.Administration.UI
         private const string EvilAnnouncementSound = "/Audio/Announcements/bloblarm.ogg";
         private const string MercenaryAnnouncementSound = "/Audio/Announcements/war.ogg";
         private const string SovietAnnouncementSound = "/Audio/Announcements/ion_storm.ogg";
+        private const int MaxAnnouncerLength = 64;
+        private const int MaxSenderLabelLength = 96;
+        private const int MinBodyFontSize = 10;
+        private const int MaxBodyFontSize = 18;
+        private const int MinHeaderFontSize = 12;
+        private const int MaxHeaderFontSize = 20;
 
         public AdminAnnounceEui()
         {
@@ -57,23 +63,15 @@ namespace Content.Server.Administration.UI
         {
             base.Opened();
 
-            if (Player is null)
-            {
+            if (!HasModeratorAccess())
                 Close();
-                return;
-            }
-
-            if (_adminManager.HasAdminFlag(Player, AdminFlags.Moderator))
-                return;
-
-            Close();
         }
 
         public override void HandleMessage(EuiMessageBase msg)
         {
             base.HandleMessage(msg);
 
-            if (Player is null)
+            if (!HasModeratorAccess())
             {
                 Close();
                 return;
@@ -82,17 +80,8 @@ namespace Content.Server.Administration.UI
             switch (msg)
             {
                 case AdminAnnounceEuiMsg.DoAnnounce doAnnounce:
-                    if (!_adminManager.HasAdminFlag(Player, AdminFlags.Moderator))
-                    {
-                        Close();
-                        break;
-                    }
-
-                    var announcement = doAnnounce.Announcement.Trim();
-                    var announcer = doAnnounce.Announcer.Trim();
-
-                    announcement = NormalizeInput(announcement, allowNewline: true);
-                    announcer = NormalizeInput(announcer, allowNewline: false);
+                    var announcement = NormalizeInput(doAnnounce.Announcement, allowNewline: true);
+                    var announcer = NormalizeInput(doAnnounce.Announcer, allowNewline: false);
 
                     if (announcement.Length == 0)
                         break;
@@ -101,50 +90,21 @@ namespace Content.Server.Administration.UI
                     if (announcement.Length > maxAnnouncementLength)
                         announcement = announcement[..maxAnnouncementLength];
 
-                    if (announcer.Length > 64)
-                        announcer = announcer[..64];
+                    if (announcer.Length > MaxAnnouncerLength)
+                        announcer = announcer[..MaxAnnouncerLength];
 
-                    var sound = doAnnounce.Sound switch
-                    {
-                        AdminAnnounceSound.Alert => AlertAnnouncementSound,
-                        AdminAnnounceSound.Intercept => InterceptAnnouncementSound,
-                        AdminAnnounceSound.Meteors => MeteorsAnnouncementSound,
-                        AdminAnnounceSound.Radiation => RadiationAnnouncementSound,
-                        AdminAnnounceSound.ShuttleCalled => ShuttleCalledAnnouncementSound,
-                        AdminAnnounceSound.PowerOn => PowerOnAnnouncementSound,
-                        AdminAnnounceSound.Evil => EvilAnnouncementSound,
-                        AdminAnnounceSound.Mercenary => MercenaryAnnouncementSound,
-                        AdminAnnounceSound.Soviet => SovietAnnouncementSound,
-                        _ => DefaultAnnouncementSound
-                    };
+                    var sound = ResolveAnnouncementSound(doAnnounce.Sound);
+                    var color = ResolveAnnouncementColor(doAnnounce.Color);
+                    var font = ResolveAnnouncementFont(doAnnounce.Font);
 
-                    var color = doAnnounce.Color switch
-                    {
-                        AdminAnnounceColor.Purple => Color.MediumPurple,
-                        AdminAnnounceColor.Orange => Color.Orange,
-                        AdminAnnounceColor.Red => Color.IndianRed,
-                        AdminAnnounceColor.Cyan => Color.Cyan,
-                        AdminAnnounceColor.Blue => Color.DodgerBlue,
-                        AdminAnnounceColor.Green => Color.LightGreen,
-                        _ => Color.Gold,
-                    };
-
-                    var font = doAnnounce.Font switch
-                    {
-                        AdminAnnounceFont.Monospace => "Monospace",
-                        AdminAnnounceFont.BoxRound => "BoxRound",
-                        AdminAnnounceFont.AnimalSilence => "AnimalSilence",
-                        _ => "DefaultBold",
-                    };
-
-                    var bodySize = Math.Clamp(doAnnounce.FontSize, 10, 18);
-                    var headerSize = Math.Clamp(bodySize + 2, 12, 20);
+                    var bodySize = Math.Clamp(doAnnounce.FontSize, MinBodyFontSize, MaxBodyFontSize);
+                    var headerSize = Math.Clamp(bodySize + 2, MinHeaderFontSize, MaxHeaderFontSize);
                     var senderLabel = doAnnounce.IncludeAnnouncementSuffix
                         ? $"{announcer} {Loc.GetString("admin-announce-header-suffix")}"
                         : announcer;
 
-                    if (senderLabel.Length > 96)
-                        senderLabel = senderLabel[..96];
+                    if (senderLabel.Length > MaxSenderLabelLength)
+                        senderLabel = senderLabel[..MaxSenderLabelLength];
 
                     switch (doAnnounce.AnnounceType)
                     {
@@ -165,6 +125,55 @@ namespace Content.Server.Administration.UI
 
                     break;
             }
+        }
+
+
+        private bool HasModeratorAccess()
+        {
+            return Player != null && _adminManager.HasAdminFlag(Player, AdminFlags.Moderator);
+        }
+
+
+        private static string ResolveAnnouncementSound(AdminAnnounceSound sound)
+        {
+            return sound switch
+            {
+                AdminAnnounceSound.Alert => AlertAnnouncementSound,
+                AdminAnnounceSound.Intercept => InterceptAnnouncementSound,
+                AdminAnnounceSound.Meteors => MeteorsAnnouncementSound,
+                AdminAnnounceSound.Radiation => RadiationAnnouncementSound,
+                AdminAnnounceSound.ShuttleCalled => ShuttleCalledAnnouncementSound,
+                AdminAnnounceSound.PowerOn => PowerOnAnnouncementSound,
+                AdminAnnounceSound.Evil => EvilAnnouncementSound,
+                AdminAnnounceSound.Mercenary => MercenaryAnnouncementSound,
+                AdminAnnounceSound.Soviet => SovietAnnouncementSound,
+                _ => DefaultAnnouncementSound
+            };
+        }
+
+        private static Color ResolveAnnouncementColor(AdminAnnounceColor color)
+        {
+            return color switch
+            {
+                AdminAnnounceColor.Purple => Color.MediumPurple,
+                AdminAnnounceColor.Orange => Color.Orange,
+                AdminAnnounceColor.Red => Color.IndianRed,
+                AdminAnnounceColor.Cyan => Color.Cyan,
+                AdminAnnounceColor.Blue => Color.DodgerBlue,
+                AdminAnnounceColor.Green => Color.LightGreen,
+                _ => Color.Gold,
+            };
+        }
+
+        private static string ResolveAnnouncementFont(AdminAnnounceFont font)
+        {
+            return font switch
+            {
+                AdminAnnounceFont.Monospace => "Monospace",
+                AdminAnnounceFont.BoxRound => "BoxRound",
+                AdminAnnounceFont.AnimalSilence => "AnimalSilence",
+                _ => "DefaultBold",
+            };
         }
 
         private void DispatchStyledGlobalAnnouncement(
@@ -233,9 +242,12 @@ namespace Content.Server.Administration.UI
                     continue;
                 }
 
-                sb ??= new StringBuilder(value.Length);
-                if (i > 0)
-                    sb.Append(value, 0, i);
+                if (sb == null)
+                {
+                    sb = new StringBuilder(value.Length);
+                    if (i > 0)
+                        sb.Append(value, 0, i);
+                }
 
                 if (allowNewline && c == '\r')
                     continue;

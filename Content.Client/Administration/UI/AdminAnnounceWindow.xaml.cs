@@ -32,76 +32,66 @@ namespace Content.Client.Administration.UI
             IoCManager.InjectDependencies(this);
 
             Announcement.Placeholder = new Rope.Leaf(_localization.GetString("admin-announce-announcement-placeholder"));
-            AnnounceMethod.AddItem(_localization.GetString("admin-announce-type-station"));
-            AnnounceMethod.SetItemMetadata(0, AdminAnnounceType.Station);
-            AnnounceMethod.AddItem(_localization.GetString("admin-announce-type-server"));
-            AnnounceMethod.SetItemMetadata(1, AdminAnnounceType.Server);
+
+            InitializeAnnounceTypeOptions();
+            InitializeStyleOptions();
+            InitializePresets();
+
+            Announcement.OnKeyBindUp += AnnouncementOnOnTextChanged;
+        }
+
+        private void InitializeAnnounceTypeOptions()
+        {
+            AddLocalizedOption(AnnounceMethod, "admin-announce-type-station", AdminAnnounceType.Station);
+            AddLocalizedOption(AnnounceMethod, "admin-announce-type-server", AdminAnnounceType.Server);
             AnnounceMethod.OnItemSelected += AnnounceMethodOnOnItemSelected;
+
             OptionsTabs.SetTabTitle(0, _localization.GetString("admin-announce-presets-tab-title"));
             OptionsTabs.SetTabTitle(1, _localization.GetString("admin-announce-custom-tab-title"));
+        }
 
-            SoundOption.AddItem(_localization.GetString("admin-announce-sound-default"));
-            SoundOption.SetItemMetadata(0, AdminAnnounceSound.Default);
-            SoundOption.AddItem(_localization.GetString("admin-announce-sound-alert"));
-            SoundOption.SetItemMetadata(1, AdminAnnounceSound.Alert);
-            SoundOption.AddItem(_localization.GetString("admin-announce-sound-intercept"));
-            SoundOption.SetItemMetadata(2, AdminAnnounceSound.Intercept);
-            SoundOption.AddItem(_localization.GetString("admin-announce-sound-meteors"));
-            SoundOption.SetItemMetadata(3, AdminAnnounceSound.Meteors);
-            SoundOption.AddItem(_localization.GetString("admin-announce-sound-radiation"));
-            SoundOption.SetItemMetadata(4, AdminAnnounceSound.Radiation);
-            SoundOption.AddItem(_localization.GetString("admin-announce-sound-shuttle-called"));
-            SoundOption.SetItemMetadata(5, AdminAnnounceSound.ShuttleCalled);
-            SoundOption.AddItem(_localization.GetString("admin-announce-sound-power-on"));
-            SoundOption.SetItemMetadata(6, AdminAnnounceSound.PowerOn);
-            SoundOption.AddItem(_localization.GetString("admin-announce-sound-evil"));
-            SoundOption.SetItemMetadata(7, AdminAnnounceSound.Evil);
-            SoundOption.AddItem(_localization.GetString("admin-announce-sound-mercenary"));
-            SoundOption.SetItemMetadata(8, AdminAnnounceSound.Mercenary);
-            SoundOption.AddItem(_localization.GetString("admin-announce-sound-soviet"));
-            SoundOption.SetItemMetadata(9, AdminAnnounceSound.Soviet);
+        private void InitializeStyleOptions()
+        {
+            AddLocalizedOption(SoundOption, "admin-announce-sound-default", AdminAnnounceSound.Default);
+            AddLocalizedOption(SoundOption, "admin-announce-sound-alert", AdminAnnounceSound.Alert);
+            AddLocalizedOption(SoundOption, "admin-announce-sound-intercept", AdminAnnounceSound.Intercept);
+            AddLocalizedOption(SoundOption, "admin-announce-sound-meteors", AdminAnnounceSound.Meteors);
+            AddLocalizedOption(SoundOption, "admin-announce-sound-radiation", AdminAnnounceSound.Radiation);
+            AddLocalizedOption(SoundOption, "admin-announce-sound-shuttle-called", AdminAnnounceSound.ShuttleCalled);
+            AddLocalizedOption(SoundOption, "admin-announce-sound-power-on", AdminAnnounceSound.PowerOn);
+            AddLocalizedOption(SoundOption, "admin-announce-sound-evil", AdminAnnounceSound.Evil);
+            AddLocalizedOption(SoundOption, "admin-announce-sound-mercenary", AdminAnnounceSound.Mercenary);
+            AddLocalizedOption(SoundOption, "admin-announce-sound-soviet", AdminAnnounceSound.Soviet);
             SoundOption.SelectId(0);
-            SoundOption.OnItemSelected += SoundOptionOnOnItemSelected;
+            SoundOption.OnItemSelected += OnOptionSelected;
 
-            ColorOption.AddItem(_localization.GetString("admin-announce-color-gold"));
-            ColorOption.SetItemMetadata(0, AdminAnnounceColor.Gold);
-            ColorOption.AddItem(_localization.GetString("admin-announce-color-purple"));
-            ColorOption.SetItemMetadata(1, AdminAnnounceColor.Purple);
-            ColorOption.AddItem(_localization.GetString("admin-announce-color-orange"));
-            ColorOption.SetItemMetadata(2, AdminAnnounceColor.Orange);
-            ColorOption.AddItem(_localization.GetString("admin-announce-color-red"));
-            ColorOption.SetItemMetadata(3, AdminAnnounceColor.Red);
-            ColorOption.AddItem(_localization.GetString("admin-announce-color-cyan"));
-            ColorOption.SetItemMetadata(4, AdminAnnounceColor.Cyan);
-            ColorOption.AddItem(_localization.GetString("admin-announce-color-blue"));
-            ColorOption.SetItemMetadata(5, AdminAnnounceColor.Blue);
-            ColorOption.AddItem(_localization.GetString("admin-announce-color-green"));
-            ColorOption.SetItemMetadata(6, AdminAnnounceColor.Green);
+            AddLocalizedOption(ColorOption, "admin-announce-color-gold", AdminAnnounceColor.Gold);
+            AddLocalizedOption(ColorOption, "admin-announce-color-purple", AdminAnnounceColor.Purple);
+            AddLocalizedOption(ColorOption, "admin-announce-color-orange", AdminAnnounceColor.Orange);
+            AddLocalizedOption(ColorOption, "admin-announce-color-red", AdminAnnounceColor.Red);
+            AddLocalizedOption(ColorOption, "admin-announce-color-cyan", AdminAnnounceColor.Cyan);
+            AddLocalizedOption(ColorOption, "admin-announce-color-blue", AdminAnnounceColor.Blue);
+            AddLocalizedOption(ColorOption, "admin-announce-color-green", AdminAnnounceColor.Green);
             ColorOption.SelectId(0);
-            ColorOption.OnItemSelected += ColorOptionOnOnItemSelected;
+            ColorOption.OnItemSelected += OnOptionSelected;
 
-            FontOption.AddItem(_localization.GetString("admin-announce-font-default"));
-            FontOption.SetItemMetadata(0, AdminAnnounceFont.Default);
-            FontOption.AddItem(_localization.GetString("admin-announce-font-monospace"));
-            FontOption.SetItemMetadata(1, AdminAnnounceFont.Monospace);
-            FontOption.AddItem(_localization.GetString("admin-announce-font-box"));
-            FontOption.SetItemMetadata(2, AdminAnnounceFont.BoxRound);
-            FontOption.AddItem(_localization.GetString("admin-announce-font-animal"));
-            FontOption.SetItemMetadata(3, AdminAnnounceFont.AnimalSilence);
+            AddLocalizedOption(FontOption, "admin-announce-font-default", AdminAnnounceFont.Default);
+            AddLocalizedOption(FontOption, "admin-announce-font-monospace", AdminAnnounceFont.Monospace);
+            AddLocalizedOption(FontOption, "admin-announce-font-box", AdminAnnounceFont.BoxRound);
+            AddLocalizedOption(FontOption, "admin-announce-font-animal", AdminAnnounceFont.AnimalSilence);
             FontOption.SelectId(0);
-            FontOption.OnItemSelected += FontOptionOnOnItemSelected;
+            FontOption.OnItemSelected += OnOptionSelected;
 
-            FontSizeOption.AddItem(_localization.GetString("admin-announce-font-size-small"));
-            FontSizeOption.SetItemMetadata(0, 10);
-            FontSizeOption.AddItem(_localization.GetString("admin-announce-font-size-medium"));
-            FontSizeOption.SetItemMetadata(1, 12);
-            FontSizeOption.AddItem(_localization.GetString("admin-announce-font-size-large"));
-            FontSizeOption.SetItemMetadata(2, 14);
-            FontSizeOption.AddItem(_localization.GetString("admin-announce-font-size-xl"));
-            FontSizeOption.SetItemMetadata(3, 16);
+            AddLocalizedOption(FontSizeOption, "admin-announce-font-size-small", 10);
+            AddLocalizedOption(FontSizeOption, "admin-announce-font-size-medium", 12);
+            AddLocalizedOption(FontSizeOption, "admin-announce-font-size-large", 14);
+            AddLocalizedOption(FontSizeOption, "admin-announce-font-size-xl", 16);
             FontSizeOption.SelectId(1);
-            FontSizeOption.OnItemSelected += FontSizeOptionOnOnItemSelected;
+            FontSizeOption.OnItemSelected += OnOptionSelected;
+        }
 
+        private void InitializePresets()
+        {
             PresetEvilButton.OnPressed += _ => SetPreset(
                 _localization.GetString("admin-announce-preset-evil-announcer"),
                 _localization.GetString("admin-announce-preset-evil-text"),
@@ -110,6 +100,7 @@ namespace Content.Client.Administration.UI
                 AdminAnnounceFont.AnimalSilence,
                 14,
                 true);
+
             PresetMercenaryButton.OnPressed += _ => SetPreset(
                 _localization.GetString("admin-announce-preset-mercenary-announcer"),
                 _localization.GetString("admin-announce-preset-mercenary-text"),
@@ -118,6 +109,7 @@ namespace Content.Client.Administration.UI
                 AdminAnnounceFont.Monospace,
                 12,
                 true);
+
             PresetSovietButton.OnPressed += _ => SetPreset(
                 _localization.GetString("admin-announce-preset-soviet-announcer"),
                 _localization.GetString("admin-announce-preset-soviet-text"),
@@ -126,8 +118,14 @@ namespace Content.Client.Administration.UI
                 AdminAnnounceFont.BoxRound,
                 14,
                 true);
+        }
 
-            Announcement.OnKeyBindUp += AnnouncementOnOnTextChanged;
+        private void AddLocalizedOption<T>(OptionButton option, string locKey, T metadata)
+            where T : notnull
+        {
+            var index = option.ItemCount;
+            option.AddItem(_localization.GetString(locKey));
+            option.SetItemMetadata(index, metadata);
         }
 
         private void SetPreset(
@@ -166,27 +164,12 @@ namespace Content.Client.Administration.UI
 
         private void AnnouncementOnOnTextChanged(GUIBoundKeyEventArgs args)
         {
-            AnnounceButton.Disabled = Rope.Collapse(Announcement.TextRope).TrimStart() == "";
+            AnnounceButton.Disabled = string.IsNullOrWhiteSpace(Rope.Collapse(Announcement.TextRope));
         }
 
-        private void SoundOptionOnOnItemSelected(OptionButton.ItemSelectedEventArgs args)
+        private static void OnOptionSelected(OptionButton.ItemSelectedEventArgs args)
         {
-            SoundOption.SelectId(args.Id);
-        }
-
-        private void ColorOptionOnOnItemSelected(OptionButton.ItemSelectedEventArgs args)
-        {
-            ColorOption.SelectId(args.Id);
-        }
-
-        private void FontOptionOnOnItemSelected(OptionButton.ItemSelectedEventArgs args)
-        {
-            FontOption.SelectId(args.Id);
-        }
-
-        private void FontSizeOptionOnOnItemSelected(OptionButton.ItemSelectedEventArgs args)
-        {
-            FontSizeOption.SelectId(args.Id);
+            args.Button.SelectId(args.Id);
         }
 
         private void AnnounceMethodOnOnItemSelected(OptionButton.ItemSelectedEventArgs args)
@@ -194,6 +177,9 @@ namespace Content.Client.Administration.UI
             AnnounceMethod.SelectId(args.Id);
             Announcer.Editable = ((AdminAnnounceType?)args.Button.SelectedMetadata ?? AdminAnnounceType.Station) == AdminAnnounceType.Station;
         }
+
+        public AdminAnnounceType SelectedAnnounceType =>
+            (AdminAnnounceType?) AnnounceMethod.SelectedMetadata ?? AdminAnnounceType.Station;
 
         public AdminAnnounceSound SelectedSound =>
             (AdminAnnounceSound?) SoundOption.SelectedMetadata ?? AdminAnnounceSound.Default;

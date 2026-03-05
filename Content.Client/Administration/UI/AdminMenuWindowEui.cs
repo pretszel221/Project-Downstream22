@@ -31,8 +31,8 @@ namespace Content.Client.Administration.UI
             SendMessage(new AdminAnnounceEuiMsg.DoAnnounce
             {
                 Announcement = Rope.Collapse(_window.Announcement.TextRope),
-                Announcer =  _window.Announcer.Text,
-                AnnounceType =  (AdminAnnounceType) (_window.AnnounceMethod.SelectedMetadata ?? AdminAnnounceType.Station),
+                Announcer = _window.Announcer.Text,
+                AnnounceType = _window.SelectedAnnounceType,
                 Sound = _window.SelectedSound,
                 Color = _window.SelectedColor,
                 Font = _window.SelectedFont,

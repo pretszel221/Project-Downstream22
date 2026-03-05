@@ -80,7 +80,7 @@ public abstract partial class SharedStunSystem : EntitySystem
     private readonly Dictionary<EntityUid, TimeSpan> _nextToggleKnockdownAt = new();
     private readonly Dictionary<EntityUid, TimeSpan> _nextStandAttemptAt = new();
     private static readonly TimeSpan AutoStandRetryDelay = TimeSpan.FromSeconds(0.25);
-    private static readonly TimeSpan ManualStandAttemptCooldown = TimeSpan.FromSeconds(0.7);
+    private static readonly TimeSpan ManualStandAttemptCooldown = TimeSpan.FromSeconds(0.75);
 
     [Dependency] private readonly ActionBlockerSystem _blocker = default!;
     [Dependency] private readonly SharedBroadphaseSystem _broadphase = default!;
@@ -492,6 +492,31 @@ public abstract partial class SharedStunSystem : EntitySystem
             _popup.PopupClient(Loc.GetString("knockdown-component-stand-no-room"), uid, uid, PopupType.SmallCaution);
             ScheduleAutoStandRetry(uid, knocked);
             return;
+
+        _nextToggleKnockdownAt[uid] = _timing.CurTime + TimeSpan.FromSeconds(0.2);
+
+        if (!HasComp<CrawlerComponent>(uid))
+            return;
+
+        if (!TryComp(uid, out KnockedDownComponent? knocked))
+        {
+            EnsureComp<KnockedDownComponent>(uid);
+            knocked = Comp<KnockedDownComponent>(uid);
+            knocked.AutoStand = false;
+            if (TryComp(uid, out CrawlerComponent? crawler))
+                knocked.NextUpdate = _timing.CurTime + crawler.DefaultKnockedDuration;
+            Dirty(uid, knocked);
+            return;
+        }
+
+        var stand = !knocked.DoAfterId.HasValue;
+        if (stand && _nextStandAttemptAt.TryGetValue(uid, out var nextStandAttempt) && _timing.CurTime < nextStandAttempt)
+            return;
+
+        if (knocked.AutoStand != stand)
+        {
+            knocked.AutoStand = stand;
+            Dirty(uid, knocked);
         }
 
         RemComp<KnockedDownComponent>(uid);
@@ -731,4 +756,3 @@ public record struct KnockedDownRefreshEvent()
 [ByRefEvent]
 [Serializable, NetSerializable]
 public sealed partial class TryStandDoAfterEvent : SimpleDoAfterEvent;
-
