@@ -45,6 +45,7 @@ using Content.Shared.Database;
 using Content.Shared.DoAfter;
 using Content.Shared.Input;
 using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Hands;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
