@@ -53,6 +53,7 @@ public abstract partial class SharedHandsSystem
         InitializeDrop();
         InitializePickup();
         InitializeRelay();
+        InitializeEventListeners();
     }
 
     public override void Shutdown()

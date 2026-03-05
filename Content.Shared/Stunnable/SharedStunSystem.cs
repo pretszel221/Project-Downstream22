@@ -52,12 +52,14 @@ using Content.Shared.Mobs.Components;
 using Content.Shared.Movement.Events;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Standing;
+using Content.Shared.Physics;
 using Content.Shared.StatusEffect;
 using Content.Shared.Throwing;
 using Content.Shared.Whitelist;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Events;
+using Robust.Shared.Physics;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Containers;
 using Content.Shared._White.Standing;
@@ -87,6 +89,7 @@ public abstract partial class SharedStunSystem : EntitySystem
     [Dependency] private readonly ClothingModifyStunTimeSystem _modify = default!; // goob edit
     [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
+    [Dependency] private readonly EntityLookupSystem _entityLookup = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
 
     /// <summary>
@@ -316,12 +319,50 @@ public abstract partial class SharedStunSystem : EntitySystem
         }
     }
 
+    private bool IntersectingStandingColliders(EntityUid uid)
+    {
+        if (!TryComp(uid, out TransformComponent? xformComp))
+            return false;
+
+        var standingLayer = (int) CollisionGroup.HighImpassable;
+        var intersecting = _physics.GetEntitiesIntersectingBody(uid, standingLayer, false);
+
+        if (intersecting.Count == 0)
+            return false;
+
+        var fixtureQuery = GetEntityQuery<FixturesComponent>();
+        var xformQuery = GetEntityQuery<TransformComponent>();
+        var ourAabb = _entityLookup.GetAABBNoContainer(uid, xformComp.LocalPosition, xformComp.LocalRotation);
+
+        foreach (var ent in intersecting)
+        {
+            if (!fixtureQuery.TryGetComponent(ent, out var fixtures) || !xformQuery.TryComp(ent, out var xformOther))
+                continue;
+
+            var xform = new Transform(xformOther.LocalPosition, xformOther.LocalRotation);
+            foreach (var fixture in fixtures.Fixtures.Values)
+            {
+                if (!fixture.Hard || (fixture.CollisionMask & standingLayer) != standingLayer)
+                    continue;
+
+                for (var i = 0; i < fixture.Shape.ChildCount; i++)
+                {
+                    var intersection = fixture.Shape.ComputeAABB(xform, i).IntersectPercentage(ourAabb);
+                    if (intersection > 0.1f)
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private bool TryStanding(EntityUid uid, KnockedDownComponent? knocked = null)
     {
         if (!Resolve(uid, ref knocked, false))
             return true;
 
-        if (knocked.NextUpdate > _timing.CurTime || !_blocker.CanMove(uid))
+        if (knocked.NextUpdate > _timing.CurTime || !_blocker.CanMove(uid) || IntersectingStandingColliders(uid))
             return false;
 
         if (!TryComp(uid, out CrawlerComponent? crawler) || !_cfg.GetCVar(CCVars.MovementCrawling))
