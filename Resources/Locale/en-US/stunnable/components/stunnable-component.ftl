@@ -7,3 +7,5 @@
 
 stunnable-component-disarm-success-others = {CAPITALIZE(THE($source))} pushes {THE($target)}!
 stunnable-component-disarm-success = You push {THE($target)}!
+knockdown-component-stand-no-room = You try to push yourself to stand up but there's not enough room!
+

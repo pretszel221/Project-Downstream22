@@ -33,7 +33,7 @@ public abstract class SharedLayingDownSystem : EntitySystem
     public override void Initialize()
     {
         CommandBinds.Builder
-            .Bind(ContentKeyFunctions.ToggleStanding, InputCmdHandler.FromDelegate(ToggleStanding))
+            .Bind(ContentKeyFunctions.ToggleKnockdown, InputCmdHandler.FromDelegate(ToggleStanding, handle: false))
             .Register<SharedLayingDownSystem>();
 
         SubscribeNetworkEvent<ChangeLayingDownEvent>(OnChangeState);
@@ -54,7 +54,8 @@ public abstract class SharedLayingDownSystem : EntitySystem
     {
         if (session?.AttachedEntity == null ||
             !HasComp<LayingDownComponent>(session.AttachedEntity) ||
-            _gravity.IsWeightless(session.AttachedEntity.Value))
+            _gravity.IsWeightless(session.AttachedEntity.Value) ||
+            HasComp<CrawlerComponent>(session.AttachedEntity.Value))
         {
             return;
         }
@@ -104,6 +105,9 @@ public abstract class SharedLayingDownSystem : EntitySystem
 
     private void OnRefreshMovementSpeed(EntityUid uid, LayingDownComponent component, RefreshMovementSpeedModifiersEvent args)
     {
+        if (HasComp<KnockedDownComponent>(uid))
+            return;
+
         if (_standing.IsDown(uid))
             args.ModifySpeed(component.SpeedModify, component.SpeedModify);
         else
@@ -175,3 +179,4 @@ public enum DropHeldItemsBehavior : byte
     DropIfStanding,
     AlwaysDrop
 }
+

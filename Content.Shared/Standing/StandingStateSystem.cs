@@ -48,7 +48,7 @@ public sealed class StandingStateSystem : EntitySystem
     [Dependency] private readonly SharedBuckleSystem _buckle = default!; // WD EDIT
 
     // If StandingCollisionLayer value is ever changed to more than one layer, the logic needs to be edited.
-    private const int StandingCollisionLayer = (int) CollisionGroup.HighImpassable;
+    public const int StandingCollisionLayer = (int) CollisionGroup.MidImpassable;
     public bool IsDown(EntityUid uid, StandingStateComponent? standingState = null)
     {
         if (!Resolve(uid, ref standingState, false))
@@ -103,7 +103,7 @@ public sealed class StandingStateSystem : EntitySystem
         {
             foreach (var (key, fixture) in fixtureComponent.Fixtures)
             {
-                if ((fixture.CollisionMask & StandingCollisionLayer) == 0)
+                if ((fixture.CollisionMask & StandingCollisionLayer) == 0 || !fixture.Hard)
                     continue;
                 standingState.ChangedFixtures.Add(key);
                 _physics.SetCollisionMask(uid, key, fixture, fixture.CollisionMask & ~StandingCollisionLayer, manager: fixtureComponent);
@@ -194,3 +194,4 @@ public sealed class StoodEvent : EntityEventArgs
 public sealed class DownedEvent : EntityEventArgs
 {
 }
+

@@ -101,7 +101,7 @@ binds:
 - function: Walk
   type: State
   key: Shift
-- function: ToggleStanding
+- function: ToggleKnockdown
   type: State
   key: R
 # Shuttle
@@ -665,3 +665,4 @@ binds:
 - function: CMUniqueAction
   type: State
   key: Space
+

@@ -8,6 +8,7 @@ using Content.Shared._White.Standing;
 using Content.Shared.Buckle;
 using Content.Shared.Rotation;
 using Content.Shared.Standing;
+using Content.Shared.Stunnable;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Shared.Timing;
@@ -39,7 +40,7 @@ public sealed class LayingDownSystem : SharedLayingDownSystem
         if (!_standing.IsDown(uid))
             return;
 
-        if (_buckle.IsBuckled(uid))
+        if (_buckle.IsBuckled(uid) || HasComp<KnockedDownComponent>(uid))
             return;
 
         if (_animation.HasRunningAnimation(uid, "rotate"))
@@ -72,6 +73,9 @@ public sealed class LayingDownSystem : SharedLayingDownSystem
 
         var uid = GetEntity(ev.User);
 
+        if (HasComp<KnockedDownComponent>(uid))
+            return;
+
         if (!TryComp<TransformComponent>(uid, out var transform) || !TryComp<RotationVisualsComponent>(uid, out var rotationVisuals))
             return;
 
@@ -86,3 +90,4 @@ public sealed class LayingDownSystem : SharedLayingDownSystem
         rotationVisuals.HorizontalRotation = Angle.FromDegrees(90);
     }
 }
+

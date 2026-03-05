@@ -69,6 +69,8 @@ namespace Content.Shared.Slippery;
 [UsedImplicitly]
 public sealed class SlipperySystem : EntitySystem
 {
+    private const float SlipKnockdownFrictionModifier = 0.4f;
+
     [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedStunSystem _stun = default!;
@@ -183,6 +185,8 @@ public sealed class SlipperySystem : EntitySystem
 
         _stun.TryParalyze(other, component.SlipData.ParalyzeTime, true);
 
+        _stun.TrySetKnockedDownFrictionModifier(other, SlipKnockdownFrictionModifier);
+
         // Preventing from playing the slip sound when you are already knocked down.
         if (playSound)
         {
@@ -243,3 +247,4 @@ public sealed class SlippedEvent : EntityEventArgs, IInventoryRelayEvent
         SuperSlippery = superSlippery;
     }
 }
+

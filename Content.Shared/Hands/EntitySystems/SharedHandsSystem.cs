@@ -53,6 +53,7 @@ public abstract partial class SharedHandsSystem
         InitializeDrop();
         InitializePickup();
         InitializeRelay();
+        InitializeEventListeners();
     }
 
     public override void Shutdown()
@@ -366,3 +367,4 @@ public abstract partial class SharedHandsSystem
         handsComp.SortedHands.Insert(index, handName);
     }
 }
+

@@ -1,28 +1,42 @@
-// SPDX-FileCopyrightText: 2022 Leon Friedrich <60421075+ElectroJr@users.noreply.github.com>
-// SPDX-FileCopyrightText: 2022 Pieter-Jan Briers <pieterjan.briers+git@gmail.com>
-// SPDX-FileCopyrightText: 2022 Vera Aguilera Puerto <6766154+Zumorica@users.noreply.github.com>
-// SPDX-FileCopyrightText: 2022 mirrorcult <lunarautomaton6@gmail.com>
-// SPDX-FileCopyrightText: 2022 wrexbe <81056464+wrexbe@users.noreply.github.com>
-// SPDX-FileCopyrightText: 2023 deltanedas <39013340+deltanedas@users.noreply.github.com>
-// SPDX-FileCopyrightText: 2025 taydeo <td12233a@gmail.com>
-//
-// SPDX-License-Identifier: MIT
-
-using Robust.Shared.Audio;
+using Content.Shared.DoAfter;
 using Robust.Shared.GameStates;
-using Robust.Shared.Serialization;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 
 namespace Content.Shared.Stunnable;
 
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState, Access(typeof(SharedStunSystem))]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState(fieldDeltas:true), AutoGenerateComponentPause, Access(typeof(SharedStunSystem))]
 public sealed partial class KnockedDownComponent : Component
 {
-    [DataField("helpInterval"), AutoNetworkedField]
-    public float HelpInterval = 1f;
+    /// <summary>
+    /// Game time that we can stand up.
+    /// </summary>
+    [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoNetworkedField, AutoPausedField]
+    public TimeSpan NextUpdate;
 
-    [DataField("helpAttemptSound")]
-    public SoundSpecifier StunAttemptSound = new SoundPathSpecifier("/Audio/Effects/thudswoosh.ogg");
+    /// <summary>
+    /// Should we try to stand up?
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public bool AutoStand = true;
 
-    [ViewVariables, AutoNetworkedField]
-    public float HelpTimer = 0f;
+    /// <summary>
+    /// The Standing Up DoAfter.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public ushort? DoAfterId;
+
+    /// <summary>
+    /// Friction modifier for knocked down players.
+    /// Makes them accelerate and deccelerate slower.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float FrictionModifier = 1f; // Should add a friction modifier to slipping to compensate for this
+
+    /// <summary>
+    /// Modifier to the maximum movement speed of a knocked down mover.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float SpeedModifier = 1f;
+
 }
+
