@@ -187,6 +187,7 @@
   - type: MindRole
     antagPrototype: Fugitive
     roleType: TeamAntagonist
+  - type: FugitiveRole
 
 - type: entity
   parent: BaseMindRoleAntag
@@ -196,6 +197,7 @@
   - type: MindRole
     antagPrototype: FugitiveHunter
     roleType: TeamAntagonist
+  - type: FugitiveHunterRole
 
 # Nukies
 - type: entity

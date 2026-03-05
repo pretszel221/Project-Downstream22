@@ -22,7 +22,7 @@
     jumpsuit: ClothingUniformJumpsuitColorOrange
     shoes: ClothingShoesColorOrange
     back: ClothingBackpack
-    pocket1: WeaponMeleeShiv
+    pocket1: Shiv
 
 - type: startingGear
   id: FugitiveHunterGear

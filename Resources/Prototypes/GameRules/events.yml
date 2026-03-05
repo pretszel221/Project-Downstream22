@@ -866,13 +866,16 @@
     earliestStart: 45
     minimumPlayers: 25
     weight: 1
-    duration: 1
+    duration: null
     maxOccurrences: 1
     chaos:
       Hostile: 40
       Friend: 40
       Combat: 80
       Death: 80
+  - type: RuleGrids
+  - type: FugitiveRule
+    hunterShuttles: [ ShuttleStriker, SyndieEvacPod ]
   - type: AntagSelection
     definitions:
     - prefRoles: [ Fugitive ]

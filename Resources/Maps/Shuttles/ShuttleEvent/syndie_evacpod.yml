@@ -1521,4 +1521,36 @@ entities:
       rot: 3.141592653589793 rad
       pos: 4.5,-3.5
       parent: 1
+- proto: SpawnPointGhostFugitiveHunter
+  entities:
+  - uid: 700
+    components:
+    - type: Transform
+      pos: -0.5,2.5
+      parent: 1
+
+- proto: SpawnPointGhostFugitiveHunter
+  entities:
+  - uid: 701
+    components:
+    - type: Transform
+      pos: 0.5,2.5
+      parent: 1
+
+- proto: SpawnPointGhostFugitiveHunter
+  entities:
+  - uid: 702
+    components:
+    - type: Transform
+      pos: -0.5,1.5
+      parent: 1
+
+- proto: SpawnPointGhostFugitiveHunter
+  entities:
+  - uid: 703
+    components:
+    - type: Transform
+      pos: 0.5,1.5
+      parent: 1
+
 ...
