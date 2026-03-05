@@ -150,7 +150,11 @@ public sealed class MagicSystem : SharedMagicSystem
             EnsureComp<ExcludeFromRoundEndSummaryComponent>(mindId);
         }
 
-        Speak(ev);
+        if (!string.IsNullOrWhiteSpace(ev.Speech))
+        {
+            var speakEvent = new SpeakSpellEvent(ev.Performer, ev.Speech);
+            RaiseLocalEvent(ref speakEvent);
+        }
         ev.Handled = true;
     }
 
