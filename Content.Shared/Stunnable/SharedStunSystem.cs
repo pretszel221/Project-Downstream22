@@ -77,6 +77,8 @@ namespace Content.Shared.Stunnable;
 
 public abstract partial class SharedStunSystem : EntitySystem
 {
+    private readonly Dictionary<EntityUid, TimeSpan> _nextToggleKnockdownAt = new();
+
     [Dependency] private readonly ActionBlockerSystem _blocker = default!;
     [Dependency] private readonly SharedBroadphaseSystem _broadphase = default!;
     [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
@@ -305,6 +307,11 @@ public abstract partial class SharedStunSystem : EntitySystem
     {
         if (session?.AttachedEntity is not { } uid || !Exists(uid) || !_cfg.GetCVar(CCVars.MovementCrawling))
             return;
+
+        if (_nextToggleKnockdownAt.TryGetValue(uid, out var nextToggle) && _timing.CurTime < nextToggle)
+            return;
+
+        _nextToggleKnockdownAt[uid] = _timing.CurTime + TimeSpan.FromSeconds(0.2);
 
         if (!HasComp<CrawlerComponent>(uid))
             return;
