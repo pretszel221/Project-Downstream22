@@ -340,7 +340,7 @@
   description: spellbook-event-true-chaos-description
   productAction: ActionTrueChaos
   cost:
-    WizCoin: 10
+    WizCoin: 12
   categories:
   - SpellbookEvents
   conditions:
