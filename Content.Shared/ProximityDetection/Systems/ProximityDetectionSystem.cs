@@ -34,8 +34,9 @@ public sealed class ProximityDetectionSystem : EntitySystem
 
     private void OnCompInit(EntityUid uid, ProximityDetectorComponent component, ComponentInit args)
     {
-        if (component.Criteria.RequireAll)
+        if (!component.Criteria.RequireAll)
             return;
+
         Log.Debug("DetectorComponent only supports requireAll = false for tags. All components are required for a match!");
     }
 

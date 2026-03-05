@@ -103,7 +103,7 @@ binds:
   key: Shift
 - function: ToggleKnockdown
   type: State
-  key: R
+  key: C
 # Shuttle
 - function: ShuttleStrafeUp
   type: State
