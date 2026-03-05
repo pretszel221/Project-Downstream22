@@ -301,6 +301,7 @@ public abstract partial class SharedStunSystem : EntitySystem
     {
         if (!TryComp(uid, out KnockedDownComponent? knocked) || !args.DamageIncreased || args.DamageDelta == null)
             return;
+        }
 
         if (args.DamageDelta.GetTotal() >= component.KnockdownDamageThreshold)
         {
