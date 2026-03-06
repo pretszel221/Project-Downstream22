@@ -554,6 +554,13 @@ public sealed class GhostRoleSystem : EntitySystem
         if (!_ghostRoles.TryGetValue(identifier, out var role))
             return;
 
+        if (!Exists(role.Owner) || !HasComp<TransformComponent>(role.Owner))
+        {
+            _ghostRoles.Remove(identifier);
+            UpdateAllEui();
+            return;
+        }
+
         if (player.AttachedEntity == null)
             return;
 
