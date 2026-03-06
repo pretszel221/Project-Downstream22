@@ -876,6 +876,10 @@
   - type: RuleGrids
   - type: FugitiveRule
     hunterShuttles: [ ShuttleStriker, SyndieEvacPod ]
+  - type: AntagLoadProfileRule
+    speciesOverride: Human
+    speciesOverrideBlacklist:
+    - IPC
   - type: AntagSelection
     definitions:
     - prefRoles: [ Fugitive ]
