@@ -34,10 +34,22 @@
   - Wizard
   - Zombies
   - Revolutionaries
+  - Fugitives
+  - FugitiveHunters
   - MinorAntagonists
   - SpaceNinja
   - Thieves
   - MalfunctioningAI
+
+- type: guideEntry
+  id: Fugitives
+  name: guide-entry-fugitives
+  text: "/ServerInfo/Guidebook/Antagonist/Fugitives.xml"
+
+- type: guideEntry
+  id: FugitiveHunters
+  name: guide-entry-fugitive-hunters
+  text: "/ServerInfo/Guidebook/Antagonist/FugitiveHunters.xml"
 
 - type: guideEntry
   id: Traitors

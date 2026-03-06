@@ -1,0 +1,30 @@
+<!--
+SPDX-FileCopyrightText: 2026 OpenAI
+
+SPDX-License-Identifier: MIT
+-->
+
+<Document>
+  # Fugitives
+
+  <Box>
+    <GuideEntityEmbed Entity="ClothingUniformJumpsuitColorOrange" Caption=""/>
+    <GuideEntityEmbed Entity="Shiv" Caption=""/>
+    <GuideEntityEmbed Entity="ToolboxMechanicalFilled" Caption=""/>
+  </Box>
+
+  Fugitives are [color={role-type-team-antagonist-color}][bold]antagonists[/bold][/color] and enemies of [bold]Nanotrasen[/bold].
+  Your goal is to survive and avoid capture by incoming bounty hunters.
+
+  - You spawn with improvised tools and survival gear. Use maintenance and station chaos to stay hidden.
+  - Avoid direct fights when possible. Being alive and uncaptured is usually your best path to victory.
+  - If you must fight, do it on your terms: ambushes, escapes, and mobility matter more than holding ground.
+
+  ## Round Context
+
+  Fugitive rounds are team-based.
+  - [bold]Fugitives[/bold] are the hunted antagonists.
+  - [bold]Hunters[/bold] are free-agent bounty hunters focused on fugitives specifically.
+
+  You are not expected to cooperate with station command or security. Stay free, stay alive, and avoid capture.
+</Document>

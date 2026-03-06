@@ -12,7 +12,7 @@
 - type: antag
   id: FugitiveHunter
   name: roles-antag-fugitive-hunter-name
-  antagonist: true
+  antagonist: false
   setPreference: true
   objective: roles-antag-fugitive-hunter-objective
 
@@ -21,8 +21,40 @@
   equipment:
     jumpsuit: ClothingUniformJumpsuitColorOrange
     shoes: ClothingShoesColorOrange
-    back: ClothingBackpack
+    gloves: ClothingHandsGlovesColorYellow
+    back: ToolboxMechanicalFilled
+    belt: ClothingBeltUtility
     pocket1: Shiv
+  storage:
+    belt:
+    - CrowbarYellow
+    - Wrench
+    - Screwdriver
+    - Wirecutter
+    - Welder
+    - Multitool
+
+- type: entity
+  parent: PinpointerUniversal
+  id: PinpointerFugitiveShip
+  name: ship return pinpointer
+  description: A pinpointer configured to continuously track the hunter insertion ship.
+  components:
+  - type: Pinpointer
+    canRetarget: false
+    updateTargetName: false
+  - type: FugitiveShipPinpointer
+
+- type: entity
+  parent: PinpointerUniversal
+  id: PinpointerFugitiveBounty
+  name: fugitive bounty tracker
+  description: A pinpointer configured to continuously track fugitive bounties.
+  components:
+  - type: Pinpointer
+    canRetarget: false
+    updateTargetName: false
+  - type: FugitiveBountyPinpointer
 
 - type: startingGear
   id: FugitiveHunterGear
@@ -43,3 +75,5 @@
     - MagazinePistol
     - Flash
     - Handcuffs
+    - PinpointerFugitiveShip
+    - PinpointerFugitiveBounty

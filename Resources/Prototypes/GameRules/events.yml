@@ -863,9 +863,9 @@
   parent: BaseGameRule
   components:
   - type: StationEvent
-    earliestStart: 45
+    earliestStart: 30
     minimumPlayers: 25
-    weight: 1
+    weight: 1.55102
     duration: null
     maxOccurrences: 1
     chaos:

@@ -12,3 +12,9 @@ fugitive-round-end-counts = Fugitives: {$fugitives} total, {$alive} alive, {$cap
 fugitive-round-end-fugitives-list = Fugitives:
 fugitive-round-end-hunters-list = Hunters:
 fugitive-round-end-player-entry = - {$name} ({$user})
+
+fugitive-role-briefing = Your fugitive identity is {$name}. Avoid capture and survive.
+fugitive-hunter-role-briefing = Fugitive bounties: {$fugitives}
+fugitive-hunter-role-briefing-no-targets = Fugitive bounties: pending assignment.
+fugitive-hunter-ship-pinpointer-target = hunter insertion ship
+fugitive-hunter-bounty-pinpointer-no-target = unassigned fugitive bounty

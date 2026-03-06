@@ -190,13 +190,15 @@
   - type: FugitiveRole
 
 - type: entity
-  parent: BaseMindRoleAntag
+  parent: BaseMindRole
   id: MindRoleFugitiveHunter
   name: Fugitive Hunter Role
   components:
   - type: MindRole
+    antag: false
     antagPrototype: FugitiveHunter
-    roleType: TeamAntagonist
+    roleType: FreeAgent
+    sortWeight: 30
   - type: FugitiveHunterRole
 
 # Nukies

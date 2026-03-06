@@ -5,13 +5,18 @@
 using Content.Server.Antag;
 using Content.Server.GameTicking.Rules.Components;
 using Content.Server.GridPreloader;
+using Content.Server.Inventory;
+using Content.Server.Pinpointer;
 using Content.Server.Roles;
 using Content.Shared.GameTicking;
 using Content.Shared.GameTicking.Components;
+using Content.Shared.Inventory;
 using Content.Shared.Mind;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Roles;
+using Content.Shared.Pinpointer;
+using System.Linq;
 using Robust.Server.GameObjects;
 
 namespace Content.Server.GameTicking.Rules;
@@ -19,9 +24,11 @@ namespace Content.Server.GameTicking.Rules;
 public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 {
     [Dependency] private readonly GridPreloaderSystem _gridPreloader = default!;
+    [Dependency] private readonly InventorySystem _inventory = default!;
     [Dependency] private readonly MapSystem _map = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
     [Dependency] private readonly SharedMindSystem _mind = default!;
+    [Dependency] private readonly PinpointerSystem _pinpointer = default!;
     [Dependency] private readonly SharedRoleSystem _role = default!;
     [Dependency] private readonly TransformSystem _xform = default!;
 
@@ -29,16 +36,19 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
     {
         base.Initialize();
 
-        SubscribeLocalEvent<FugitiveRuleComponent, GameRuleAddedEvent>(OnRuleAdded);
         SubscribeLocalEvent<FugitiveRuleComponent, AfterAntagEntitySelectedEvent>(OnAfterAntagSelected);
+        SubscribeLocalEvent<FugitiveRoleComponent, GetBriefingEvent>(OnFugitiveBriefing);
+        SubscribeLocalEvent<FugitiveHunterRoleComponent, GetBriefingEvent>(OnFugitiveHunterBriefing);
     }
 
-    private void OnRuleAdded(Entity<FugitiveRuleComponent> ent, ref GameRuleAddedEvent args)
+    protected override void Added(EntityUid uid, FugitiveRuleComponent component, GameRuleComponent gameRule, GameRuleAddedEvent args)
     {
-        if (ent.Comp.HunterShuttles.Count == 0)
+        base.Added(uid, component, gameRule, args);
+
+        if (component.HunterShuttles.Count == 0)
             return;
 
-        var shuttleProto = ent.Comp.HunterShuttles[RobustRandom.Next(ent.Comp.HunterShuttles.Count)];
+        var shuttleProto = component.HunterShuttles[RobustRandom.Next(component.HunterShuttles.Count)];
         if (!_gridPreloader.TryGetPreloadedGrid(shuttleProto, out var loadedShuttle) || loadedShuttle is not { } shuttle)
             return;
 
@@ -46,21 +56,89 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         _xform.SetParent(shuttle, mapUid);
         _map.InitializeMap(mapUid);
 
-        ent.Comp.HunterShuttleGrids.Add(shuttle);
+        component.HunterShuttleGrids.Add(shuttle);
 
         var loadedEv = new RuleLoadedGridsEvent(mapId, new List<EntityUid> { shuttle });
-        RaiseLocalEvent(ent.Owner, ref loadedEv);
+        RaiseLocalEvent(uid, ref loadedEv);
     }
 
     private void OnAfterAntagSelected(Entity<FugitiveRuleComponent> ent, ref AfterAntagEntitySelectedEvent args)
     {
-        if (!args.Def.PrefRoles.Contains("Fugitive"))
+        if (args.Def.PrefRoles.Contains("Fugitive"))
+        {
+            if (TryFindRandomTile(out _, out _, out _, out var coords))
+                _xform.SetCoordinates(args.EntityUid, coords);
+
+            UpdateHunterTrackers(ent.Comp);
+            return;
+        }
+
+        if (!args.Def.PrefRoles.Contains("FugitiveHunter"))
             return;
 
-        if (!TryFindRandomTile(out _, out _, out _, out var coords))
-            return;
+        ConfigureHunterTrackers(args.EntityUid, ent.Comp);
+    }
 
-        _xform.SetCoordinates(args.EntityUid, coords);
+    private void OnFugitiveBriefing(Entity<FugitiveRoleComponent> ent, ref GetBriefingEvent args)
+    {
+        var name = args.Mind.Comp.CharacterName ?? Name(args.Mind.Owner);
+        args.Append(Loc.GetString("fugitive-role-briefing", ("name", name)));
+    }
+
+    private void OnFugitiveHunterBriefing(Entity<FugitiveHunterRoleComponent> ent, ref GetBriefingEvent args)
+    {
+        var fugitives = GetMindsWithRole<FugitiveRoleComponent>();
+        if (fugitives.Count == 0)
+        {
+            args.Append(Loc.GetString("fugitive-hunter-role-briefing-no-targets"));
+            return;
+        }
+
+        var names = string.Join(", ", fugitives.Select(f => f.Comp.CharacterName ?? "Unknown"));
+        args.Append(Loc.GetString("fugitive-hunter-role-briefing", ("fugitives", names)));
+    }
+
+    private void UpdateHunterTrackers(FugitiveRuleComponent rule)
+    {
+        var hunters = GetMindsWithRole<FugitiveHunterRoleComponent>();
+        foreach (var hunterMind in hunters)
+        {
+            if (hunterMind.Comp.OwnedEntity is not { } hunter)
+                continue;
+
+            ConfigureHunterTrackers(hunter, rule);
+        }
+    }
+
+    private void ConfigureHunterTrackers(EntityUid hunter, FugitiveRuleComponent rule)
+    {
+        var fugitiveTarget = GetMindsWithRole<FugitiveRoleComponent>()
+            .Select(m => m.Comp.OwnedEntity)
+            .FirstOrDefault(uid => uid != null);
+
+        foreach (var item in _inventory.GetHandOrInventoryEntities(hunter))
+        {
+            if (!TryComp<PinpointerComponent>(item, out var pinpointer))
+                continue;
+
+            if (HasComp<FugitiveShipPinpointerComponent>(item))
+            {
+                var ship = rule.HunterShuttleGrids.FirstOrDefault();
+                _pinpointer.SetTargetWithCustomName(item, ship, Loc.GetString("fugitive-hunter-ship-pinpointer-target"), pinpointer);
+                _pinpointer.SetActive(item, true, pinpointer);
+                continue;
+            }
+
+            if (!HasComp<FugitiveBountyPinpointerComponent>(item))
+                continue;
+
+            var targetName = fugitiveTarget == null
+                ? Loc.GetString("fugitive-hunter-bounty-pinpointer-no-target")
+                : Name(fugitiveTarget.Value);
+
+            _pinpointer.SetTargetWithCustomName(item, fugitiveTarget, targetName, pinpointer);
+            _pinpointer.SetActive(item, true, pinpointer);
+        }
     }
 
     protected override void AppendRoundEndText(EntityUid uid,

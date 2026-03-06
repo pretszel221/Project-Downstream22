@@ -1,0 +1,31 @@
+<!--
+SPDX-FileCopyrightText: 2026 OpenAI
+
+SPDX-License-Identifier: MIT
+-->
+
+<Document>
+  # Fugitive Hunters
+
+  <Box>
+    <GuideEntityEmbed Entity="PinpointerFugitiveShip" Caption="Ship Tracker"/>
+    <GuideEntityEmbed Entity="PinpointerFugitiveBounty" Caption="Bounty Tracker"/>
+    <GuideEntityEmbed Entity="Zipties" Caption=""/>
+  </Box>
+
+  Fugitive hunters are [color={role-type-free-agent-color}][bold]free agents[/bold][/color].
+  You are [bold]not[/bold] general station antagonists in this mode.
+
+  Your contract is specific: locate and capture fugitives.
+  - Use your ship tracker pinpointer to navigate back to your insertion craft.
+  - Use your bounty tracker pinpointer to locate fugitive targets.
+  - Focus on fugitive captures, dead or alive.
+
+  ## Conduct
+
+  - Do not treat unrelated crew as your objective.
+  - Your job is bounty recovery, not broad station sabotage.
+  - You may use force as needed against fugitives and resistance during capture attempts.
+
+  In short: you are contractors here for a job, not invaders here to destroy the station.
+</Document>
