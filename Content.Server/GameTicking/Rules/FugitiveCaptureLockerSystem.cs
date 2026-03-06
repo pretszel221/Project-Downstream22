@@ -10,6 +10,7 @@ using Content.Server.Storage.Components;
 using Content.Shared.Cuffs.Components;
 using Content.Shared.GameTicking.Components;
 using Content.Shared.Mind;
+using Content.Shared.Roles;
 using Robust.Server.GameObjects;
 using Content.Shared.Verbs;
 
