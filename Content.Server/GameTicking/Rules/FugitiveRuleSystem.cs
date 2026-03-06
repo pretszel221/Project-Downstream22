@@ -17,6 +17,8 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Roles;
 using Content.Shared.Pinpointer;
 using Content.Shared.Examine;
+using Content.Shared.Zombies;
+using Content.Server.Zombies;
 using System;
 using System.Linq;
 using Robust.Server.GameObjects;
@@ -48,9 +50,6 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         "MaintenanceInsulsSpawner",
     };
 
-    private const string FugitiveSurviveObjective = "FugitiveSurviveObjective";
-    private const string FugitiveHunterCaptureQuotaObjective = "FugitiveHunterCaptureQuotaObjective";
-    private const string FugitiveHunterBountyNoTargetLoc = "fugitive-hunter-bounty-pinpointer-no-target";
     private static readonly string[] FugitiveTrackedSlots = new[] { "jumpsuit", "outerClothing", "id" };
 
     [Dependency] private readonly InventorySystem _inventory = default!;
@@ -83,23 +82,25 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 
     private void OnAfterAntagSelected(Entity<FugitiveRuleComponent> ent, ref AfterAntagEntitySelectedEvent args)
     {
-        if (args.Def.PrefRoles.Contains("Fugitive"))
+        if (args.Def.PrefRoles.Contains(ent.Comp.FugitivePrefRole))
         {
             if (TryFindMaintenanceCoordinates(out var coords) || TryFindRandomTile(out _, out _, out _, out coords))
                 _xform.SetCoordinates(args.EntityUid, coords);
 
             RegisterFugitive(ent.Comp, args.EntityUid);
 
-            EnsureFugitiveObjective(args.EntityUid);
+            EnsureFugitiveObjective(args.EntityUid, ent.Comp);
+            if (ent.Comp.FugitivesAreInitialInfected)
+                EnsureInitialInfectedComponents(args.EntityUid, ent.Comp);
             UpdateHunterTrackers(ent.Comp);
             return;
         }
 
-        if (!args.Def.PrefRoles.Contains("FugitiveHunter"))
+        if (!args.Def.PrefRoles.Contains(ent.Comp.HunterPrefRole))
             return;
 
         ConfigureHunterTrackers(args.EntityUid, ent.Comp);
-        EnsureHunterObjectives(args.EntityUid);
+        EnsureHunterObjectives(args.EntityUid, ent.Comp);
     }
 
     private bool TryFindMaintenanceCoordinates(out EntityCoordinates coords)
@@ -130,26 +131,26 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         return true;
     }
 
-    private void EnsureFugitiveObjective(EntityUid fugitive)
+    private void EnsureFugitiveObjective(EntityUid fugitive, FugitiveRuleComponent rule)
     {
         if (!_mind.TryGetMind(fugitive, out var mindId, out var mind))
             return;
 
         foreach (var objective in mind.Objectives)
         {
-            if (MetaData(objective).EntityPrototype?.ID == FugitiveSurviveObjective)
+            if (MetaData(objective).EntityPrototype?.ID == rule.FugitiveObjectivePrototype)
                 return;
         }
 
-        _mind.TryAddObjective(mindId, mind, FugitiveSurviveObjective);
+        _mind.TryAddObjective(mindId, mind, rule.FugitiveObjectivePrototype);
     }
 
-    private void EnsureHunterObjectives(EntityUid hunter)
+    private void EnsureHunterObjectives(EntityUid hunter, FugitiveRuleComponent rule)
     {
         if (!_mind.TryGetMind(hunter, out var hunterMindId, out var hunterMind))
             return;
 
-        EnsureHunterCaptureQuotaObjective(hunterMindId, hunterMind);
+        EnsureHunterCaptureQuotaObjective(hunterMindId, hunterMind, rule);
     }
 
     private void RegisterFugitive(FugitiveRuleComponent rule, EntityUid fugitive)
@@ -163,15 +164,25 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         rule.TotalFugitives = rule.FugitiveMinds.Count;
     }
 
-    private void EnsureHunterCaptureQuotaObjective(EntityUid hunterMindId, MindComponent hunterMind)
+    private void EnsureHunterCaptureQuotaObjective(EntityUid hunterMindId, MindComponent hunterMind, FugitiveRuleComponent? rule)
     {
-        foreach (var objective in hunterMind.Objectives)
-        {
-            if (MetaData(objective).EntityPrototype?.ID == FugitiveHunterCaptureQuotaObjective)
-                return;
-        }
+        var objectives = rule?.HunterObjectivePrototypes ?? new List<string> { "FugitiveHunterCaptureQuotaObjective" };
 
-        _mind.TryAddObjective(hunterMindId, hunterMind, FugitiveHunterCaptureQuotaObjective);
+        foreach (var objective in objectives)
+        {
+            var exists = false;
+            foreach (var assigned in hunterMind.Objectives)
+            {
+                if (MetaData(assigned).EntityPrototype?.ID != objective)
+                    continue;
+
+                exists = true;
+                break;
+            }
+
+            if (!exists)
+                _mind.TryAddObjective(hunterMindId, hunterMind, objective);
+        }
     }
 
     private void OnFugitiveCaptured(FugitiveCapturedEvent args)
@@ -196,17 +207,18 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 
     private void OnFugitiveHunterBriefing(Entity<FugitiveHunterRoleComponent> ent, ref GetBriefingEvent args)
     {
-        args.Append(Loc.GetString("fugitive-hunter-role-briefing-preference"));
+        var rule = GetCurrentRule();
+        args.Append(Loc.GetString(rule?.HunterBriefingPrefLoc ?? "fugitive-hunter-role-briefing-preference"));
 
         var fugitives = GetMindsWithRole<FugitiveRoleComponent>();
         if (fugitives.Count == 0)
         {
-            args.Append(Loc.GetString("fugitive-hunter-role-briefing-no-targets"));
+            args.Append(Loc.GetString(rule?.HunterBriefingNoTargetsLoc ?? "fugitive-hunter-role-briefing-no-targets"));
             return;
         }
 
         var names = string.Join(", ", fugitives.Select(f => f.Comp.CharacterName ?? "Unknown"));
-        args.Append(Loc.GetString("fugitive-hunter-role-briefing", ("fugitives", names)));
+        args.Append(Loc.GetString(rule?.HunterBriefingTargetsLoc ?? "fugitive-hunter-role-briefing", ("fugitives", names)));
     }
 
     private void UpdateHunterTrackers(FugitiveRuleComponent rule)
@@ -231,7 +243,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             if (HasComp<FugitiveShipPinpointerComponent>(item))
             {
                 var ship = rule.HunterShuttleGrids.FirstOrDefault();
-                _pinpointer.SetTargetWithCustomName(item, ship, Loc.GetString("fugitive-hunter-ship-pinpointer-target"), pinpointer);
+                _pinpointer.SetTargetWithCustomName(item, ship, Loc.GetString(rule.ShipPinpointerTargetLoc), pinpointer);
                 _pinpointer.SetActive(item, true, pinpointer);
                 continue;
             }
@@ -246,11 +258,12 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 
     private void ResetBountyTracker(EntityUid tracker,
         FugitiveBountyPinpointerComponent bounty,
-        PinpointerComponent pinpointer)
+        PinpointerComponent pinpointer,
+        string noTargetLoc)
     {
         bounty.ActiveTracking = false;
         bounty.TimeRemaining = bounty.CooldownSeconds;
-        _pinpointer.SetTargetWithCustomName(tracker, null, Loc.GetString(FugitiveHunterBountyNoTargetLoc), pinpointer);
+        _pinpointer.SetTargetWithCustomName(tracker, null, Loc.GetString(noTargetLoc), pinpointer);
         _pinpointer.SetActive(tracker, false, pinpointer);
     }
 
@@ -271,6 +284,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         base.Update(frameTime);
 
         var trackedClothingTargets = GetTrackedClothingTargets();
+        var rule = GetCurrentRule();
 
         var query = EntityQueryEnumerator<FugitiveBountyPinpointerComponent, PinpointerComponent>();
         while (query.MoveNext(out var uid, out var bounty, out var pinpointer))
@@ -281,7 +295,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 
             if (bounty.ActiveTracking)
             {
-                ResetBountyTracker(uid, bounty, pinpointer);
+                ResetBountyTracker(uid, bounty, pinpointer, rule?.BountyNoTargetLoc ?? "fugitive-hunter-bounty-pinpointer-no-target");
                 continue;
             }
 
@@ -293,7 +307,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
                 : trackedClothingTargets[RobustRandom.Next(trackedClothingTargets.Count)];
 
             var targetName = suitTarget == null
-                ? Loc.GetString(FugitiveHunterBountyNoTargetLoc)
+                ? Loc.GetString(rule?.BountyNoTargetLoc ?? "fugitive-hunter-bounty-pinpointer-no-target")
                 : Loc.GetString("fugitive-hunter-bounty-pinpointer-clothing-target", ("clothing", Name(suitTarget.Value)));
 
             _pinpointer.SetTargetWithCustomName(uid, suitTarget, targetName, pinpointer);
@@ -468,6 +482,29 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         }
 
         return (fugitives, hunters);
+    }
+
+    private FugitiveRuleComponent? GetCurrentRule()
+    {
+        var query = EntityQueryEnumerator<FugitiveRuleComponent, GameRuleComponent>();
+        while (query.MoveNext(out _, out var rule, out _))
+        {
+            return rule;
+        }
+
+        return null;
+    }
+
+    private void EnsureInitialInfectedComponents(EntityUid fugitive, FugitiveRuleComponent rule)
+    {
+        var pending = EnsureComp<PendingZombieComponent>(fugitive);
+        var grace = TimeSpan.FromSeconds(Math.Max(0f, rule.InitialInfectedGraceSeconds));
+        pending.MinInitialInfectedGrace = grace;
+        pending.MaxInitialInfectedGrace = grace;
+
+        EnsureComp<ZombifyOnDeathComponent>(fugitive);
+        EnsureComp<IncurableZombieComponent>(fugitive);
+        EnsureComp<InitialInfectedComponent>(fugitive);
     }
 
     private List<Entity<MindComponent>> GetMindsWithRole<TRole>() where TRole : IComponent

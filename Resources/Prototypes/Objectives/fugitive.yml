@@ -29,3 +29,48 @@
       sprite: Structures/Storage/closet.rsi
       state: welded
   - type: FugitiveHunterCaptureQuotaCondition
+
+- type: entity
+  parent: BaseObjective
+  id: InitialInfectedFugitiveObjective
+  name: Make Nanotrasen pay for what they did to you.
+  description: Wreak havoc on station operations and make your escape impossible to ignore.
+  components:
+  - type: Objective
+    difficulty: 1.0
+    issuer: objective-issuer-unknown
+    icon:
+      sprite: Mobs/Species/Human/organs.rsi
+      state: heart-on
+
+- type: entity
+  parent: BaseObjective
+  id: CBURNContainOutbreakObjective
+  name: Stop the outbreak from spreading.
+  description: Stop the outbreak from spreading.
+  components:
+  - type: Objective
+    difficulty: 1.0
+    issuer: objective-issuer-nanotrasen
+    unique: true
+    icon:
+      sprite: Structures/Storage/closet.rsi
+      state: welded
+  - type: FugitiveHunterCaptureQuotaCondition
+    titleLoc: cburn-hunter-capture-contain-title
+
+- type: entity
+  parent: BaseObjective
+  id: CBURNReclaimExperimentsObjective
+  name: Reclaim each of the lab experiments.
+  description: Reclaim each of the lab experiments.
+  components:
+  - type: Objective
+    difficulty: 1.0
+    issuer: objective-issuer-nanotrasen
+    unique: true
+    icon:
+      sprite: Structures/Storage/closet.rsi
+      state: welded
+  - type: FugitiveHunterCaptureQuotaCondition
+    titleLoc: cburn-hunter-capture-reclaim-title

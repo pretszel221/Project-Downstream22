@@ -29,3 +29,11 @@ fugitive-capture-locker-incorrect-target = Incorrect Target
 fugitive-hunter-capture-quota-title = Capture fugitives ({$captured}/{$total})
 
 objective-issuer-greyhold = [color=silver]Greyhold Mercenary Company[/color]
+
+cburn-hunter-role-briefing = Escaped initial infected subjects: {$fugitives}
+cburn-hunter-role-briefing-no-targets = Escaped initial infected subjects: pending assignment.
+cburn-hunter-role-briefing-preference = Nanotrasen directive: stop the outbreak from spreading and reclaim every lab experiment.
+cburn-hunter-ship-pinpointer-target = CBURN response shuttle
+cburn-hunter-capture-contain-title = Stop the outbreak from spreading ({$captured}/{$total})
+cburn-hunter-capture-reclaim-title = Reclaim each of the lab experiments ({$captured}/{$total})
+objective-issuer-nanotrasen = [color=deepskyblue]Nanotrasen[/color]

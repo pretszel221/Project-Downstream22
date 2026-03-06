@@ -26,7 +26,7 @@ public sealed class FugitiveHunterCaptureQuotaSystem : EntitySystem
     private void OnAfterAssign(Entity<FugitiveHunterCaptureQuotaConditionComponent> ent, ref ObjectiveAfterAssignEvent args)
     {
         var counts = GetCaptureCounts();
-        var title = GetObjectiveTitle(counts.captured, counts.total);
+        var title = GetObjectiveTitle(ent.Comp.TitleLoc, counts.captured, counts.total);
         _meta.SetEntityName(ent.Owner, title, args.Meta);
     }
 
@@ -36,24 +36,22 @@ public sealed class FugitiveHunterCaptureQuotaSystem : EntitySystem
         var clampedTotal = Math.Max(1, total);
         args.Progress = Math.Clamp((float) captured / clampedTotal, 0f, 1f);
 
-        _meta.SetEntityName(ent.Owner, GetObjectiveTitle(captured, total));
+        _meta.SetEntityName(ent.Owner, GetObjectiveTitle(ent.Comp.TitleLoc, captured, total));
     }
 
     private void OnFugitiveCaptured(FugitiveCapturedEvent args)
     {
         var (captured, total) = GetCaptureCounts();
-        var title = GetObjectiveTitle(captured, total);
-
         var query = EntityQueryEnumerator<FugitiveHunterCaptureQuotaConditionComponent, MetaDataComponent>();
-        while (query.MoveNext(out var uid, out _, out var meta))
+        while (query.MoveNext(out var uid, out var quota, out var meta))
         {
-            _meta.SetEntityName(uid, title, meta);
+            _meta.SetEntityName(uid, GetObjectiveTitle(quota.TitleLoc, captured, total), meta);
         }
     }
 
-    private string GetObjectiveTitle(int captured, int total)
+    private string GetObjectiveTitle(string locKey, int captured, int total)
     {
-        return Loc.GetString("fugitive-hunter-capture-quota-title", ("captured", captured), ("total", total));
+        return Loc.GetString(locKey, ("captured", captured), ("total", total));
     }
 
     private (int captured, int total) GetCaptureCounts()

@@ -26,7 +26,7 @@ meta:
   forkId: ""
   forkVersion: ""
   time: 12/29/2025 04:15:07
-  entityCount: 253
+  entityCount: 260
 maps: []
 grids:
 - 1
@@ -2213,4 +2213,46 @@ entities:
     - type: Physics
       angularDamping: 0
       linearDamping: 0
+
+- proto: SpawnPointGhostFugitive
+  entities:
+  - uid: 258
+    components:
+    - type: Transform
+      pos: -0.42289284,-11.087885
+      parent: 1
+  - uid: 259
+    components:
+    - type: Transform
+      pos: -1.0833926,-11.087885
+      parent: 1
+  - uid: 260
+    components:
+    - type: Transform
+      pos: -1.7438924,-11.087885
+      parent: 1
+- proto: SpawnPointGhostFugitiveHunter
+  entities:
+  - uid: 254
+    components:
+    - type: Transform
+      pos: 2.808663,-12.087884
+      parent: 1
+  - uid: 255
+    components:
+    - type: Transform
+      pos: 3.4691627,-12.087884
+      parent: 1
+  - uid: 256
+    components:
+    - type: Transform
+      pos: 4.1296625,-12.087884
+      parent: 1
+- proto: FugitiveCaptureLocker
+  entities:
+  - uid: 257
+    components:
+    - type: Transform
+      pos: 5.018754,-12.074912
+      parent: 1
 ...

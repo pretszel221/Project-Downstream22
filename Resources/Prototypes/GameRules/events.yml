@@ -117,6 +117,7 @@
     - id: DerelictCyborgSpawn
     - id: WizardSpawn
     - id: FugitivesSpawn
+    - id: FugitivesCBURNOutbreakSpawn
     - id: ColossusSpawn # Funky
 
 - type: entity
@@ -915,5 +916,83 @@
         - NamesFirst
         - NamesLast
       startingGear: FugitiveHunterGear
+      mindRoles:
+      - MindRoleFugitiveHunter
+
+- type: entity
+  id: FugitivesCBURNOutbreakSpawn
+  parent: BaseGameRule
+  components:
+  - type: StationEvent
+    earliestStart: 30
+    minimumPlayers: 25
+    weight: 1
+    duration: null
+    maxOccurrences: 1
+    chaos:
+      Hostile: 40
+      Friend: 40
+      Combat: 80
+      Death: 80
+  - type: RuleGrids
+  - type: LoadMapRule
+    gridPath: /Maps/_Funkystation/Shuttles/ERTShuttles/ERTBurnWagonV2.yml
+  - type: FugitiveRule
+    fugitivePrefRole: InitialInfected
+    fugitiveObjectivePrototype: InitialInfectedFugitiveObjective
+    hunterObjectivePrototypes:
+    - CBURNContainOutbreakObjective
+    - CBURNReclaimExperimentsObjective
+    hunterBriefingPrefLoc: cburn-hunter-role-briefing-preference
+    hunterBriefingTargetsLoc: cburn-hunter-role-briefing
+    hunterBriefingNoTargetsLoc: cburn-hunter-role-briefing-no-targets
+    shipPinpointerTargetLoc: cburn-hunter-ship-pinpointer-target
+    fugitivesAreInitialInfected: true
+    initialInfectedGraceSeconds: 180
+  - type: AntagLoadProfileRule
+    speciesOverride: Human
+    speciesOverrideBlacklist:
+    - IPC
+  - type: AntagSelection
+    definitions:
+    - prefRoles: [ InitialInfected ]
+      min: 3
+      max: 3
+      playerRatio: 15
+      pickPlayer: false
+      spawnerPrototype: SpawnPointGhostFugitive
+      briefing:
+        sound: "/Audio/Ambience/Antag/zombie_start.ogg"
+      blacklist:
+        components:
+        - AntagImmune
+      components:
+      - type: RandomMetadata
+        nameSegments:
+        - NamesFirst
+        - NamesLast
+      - type: FugitiveCaptureTarget
+      - type: PendingZombie
+        minInitialInfectedGrace: 180
+        maxInitialInfectedGrace: 180
+      - type: ZombifyOnDeath
+      - type: IncurableZombie
+      - type: InitialInfected
+      startingGear: FugitiveGear
+      mindRoles:
+      - MindRoleFugitive
+      - MindRoleInitialInfected
+    - prefRoles: [ FugitiveHunter ]
+      min: 3
+      max: 3
+      playerRatio: 15
+      pickPlayer: false
+      spawnerPrototype: SpawnPointGhostFugitiveHunter
+      components:
+      - type: RandomMetadata
+        nameSegments:
+        - NamesMilitaryFirst
+        - NamesMilitaryLast
+      startingGear: CBURNFugitiveHunterGear
       mindRoles:
       - MindRoleFugitiveHunter
