@@ -38,6 +38,8 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 
     private const string FugitiveSurviveObjective = "FugitiveSurviveObjective";
     private const string FugitiveHunterCaptureQuotaObjective = "FugitiveHunterCaptureQuotaObjective";
+    private const string FugitiveHunterBountyNoTargetLoc = "fugitive-hunter-bounty-pinpointer-no-target";
+    private static readonly string[] FugitiveTrackedSlots = new[] { "jumpsuit", "outerClothing", "id" };
 
     [Dependency] private readonly InventorySystem _inventory = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
@@ -225,11 +227,19 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             if (!TryComp<FugitiveBountyPinpointerComponent>(item, out var bounty))
                 continue;
 
-            bounty.ActiveTracking = false;
-            bounty.TimeRemaining = bounty.CooldownSeconds;
-            _pinpointer.SetTargetWithCustomName(item, null, Loc.GetString("fugitive-hunter-bounty-pinpointer-no-target"), pinpointer);
-            _pinpointer.SetActive(item, false, pinpointer);
+            ResetBountyTracker(item, bounty, pinpointer);
         }
+    }
+
+
+    private void ResetBountyTracker(EntityUid tracker,
+        FugitiveBountyPinpointerComponent bounty,
+        PinpointerComponent pinpointer)
+    {
+        bounty.ActiveTracking = false;
+        bounty.TimeRemaining = bounty.CooldownSeconds;
+        _pinpointer.SetTargetWithCustomName(tracker, null, Loc.GetString(FugitiveHunterBountyNoTargetLoc), pinpointer);
+        _pinpointer.SetActive(tracker, false, pinpointer);
     }
 
     private EntityUid? GetRandomFugitiveTrackedClothing()
@@ -242,7 +252,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             return null;
 
         var fugitive = fugitives[RobustRandom.Next(fugitives.Count)].Comp.OwnedEntity!.Value;
-        foreach (var slot in new[] { "jumpsuit", "outerClothing", "id" })
+        foreach (var slot in FugitiveTrackedSlots)
         {
             if (_inventory.TryGetSlotEntity(fugitive, slot, out var clothing) && clothing != null)
                 return clothing.Value;
@@ -276,10 +286,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 
             if (bounty.ActiveTracking)
             {
-                bounty.ActiveTracking = false;
-                bounty.TimeRemaining = bounty.CooldownSeconds;
-                _pinpointer.SetTargetWithCustomName(uid, null, Loc.GetString("fugitive-hunter-bounty-pinpointer-no-target"), pinpointer);
-                _pinpointer.SetActive(uid, false, pinpointer);
+                ResetBountyTracker(uid, bounty, pinpointer);
                 continue;
             }
 
@@ -288,7 +295,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 
             var suitTarget = GetRandomFugitiveTrackedClothing();
             var targetName = suitTarget == null
-                ? Loc.GetString("fugitive-hunter-bounty-pinpointer-no-target")
+                ? Loc.GetString(FugitiveHunterBountyNoTargetLoc)
                 : Loc.GetString("fugitive-hunter-bounty-pinpointer-clothing-target", ("clothing", Name(suitTarget.Value)));
 
             _pinpointer.SetTargetWithCustomName(uid, suitTarget, targetName, pinpointer);
