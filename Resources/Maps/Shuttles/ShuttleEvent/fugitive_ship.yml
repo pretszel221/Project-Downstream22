@@ -232,24 +232,36 @@ entities:
       rot: -1.5707963267948966 rad
       pos: -5.5,3.5
       parent: 1
+    - type: AccessReader
+      access:
+      - [ "FugitiveHunter" ]
   - uid: 4
     components:
     - type: Transform
       rot: -1.5707963267948966 rad
       pos: -5.5,1.5
       parent: 1
+    - type: AccessReader
+      access:
+      - [ "FugitiveHunter" ]
   - uid: 5
     components:
     - type: Transform
       rot: 1.5707963267948966 rad
       pos: 0.5,3.5
       parent: 1
+    - type: AccessReader
+      access:
+      - [ "FugitiveHunter" ]
   - uid: 6
     components:
     - type: Transform
       rot: 1.5707963267948966 rad
       pos: 0.5,1.5
       parent: 1
+    - type: AccessReader
+      access:
+      - [ "FugitiveHunter" ]
 - proto: APCHyperCapacity
   entities:
   - uid: 7
@@ -649,6 +661,12 @@ entities:
     - type: Transform
       pos: -2.5,8.5
       parent: 1
+    - type: AccessReader
+      access:
+      - [ "FugitiveHunter" ]
+    - type: Anchorable
+      flags:
+      - Anchorable
 - proto: ConveyorBelt
   entities:
   - uid: 81
@@ -1372,6 +1390,9 @@ entities:
     - type: Transform
       pos: -2.5,7.5
       parent: 1
+    - type: AccessReader
+      access:
+      - [ "FugitiveHunter" ]
 - proto: WindowReinforcedDirectional
   entities:
   - uid: 185
@@ -1406,5 +1427,9 @@ entities:
   - uid: 4001
     components:
     - type: Transform
+      anchored: true
       pos: -4.5,2.5
       parent: 1
+    - type: Anchorable
+      flags:
+      - Anchorable

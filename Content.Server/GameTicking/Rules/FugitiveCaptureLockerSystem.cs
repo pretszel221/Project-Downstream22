@@ -53,14 +53,26 @@ public sealed class FugitiveCaptureLockerSystem : EntitySystem
         var capturedAny = false;
         foreach (var occupant in occupants)
         {
-            if (!_mind.TryGetMind(occupant, out var mindId, out var mind) || !_role.MindHasRole<FugitiveRoleComponent>((mindId, mind), out _))
+            if (!TryComp<FugitiveCaptureTargetComponent>(occupant, out var fugitiveTarget) || fugitiveTarget.Captured)
                 continue;
 
-            // Send target to ghost and round-remove their body.
-            _ghost.SpawnGhost((mindId, (MindComponent?) mind), spawnPosition: Transform(locker).Coordinates, canReturn: false);
+            fugitiveTarget.Captured = true;
+            Dirty(occupant, fugitiveTarget);
+
+            EntityUid? fugitiveMindId = null;
+            MindComponent? fugitiveMind = null;
+            if (_mind.TryGetMind(occupant, out var mindId, out var mind) && _role.MindHasRole<FugitiveRoleComponent>((mindId, mind), out _))
+            {
+                fugitiveMindId = mindId;
+                fugitiveMind = mind;
+            }
+
+            if (fugitiveMindId != null)
+                _ghost.SpawnGhost((fugitiveMindId.Value, fugitiveMind), spawnPosition: Transform(locker).Coordinates, canReturn: false);
+
             QueueDel(occupant);
 
-            var ev = new FugitiveCapturedEvent(mindId);
+            var ev = new FugitiveCapturedEvent(occupant, fugitiveMindId);
             RaiseLocalEvent(ev);
             capturedAny = true;
         }
@@ -72,4 +84,4 @@ public sealed class FugitiveCaptureLockerSystem : EntitySystem
     }
 }
 
-public readonly record struct FugitiveCapturedEvent(EntityUid FugitiveMindId);
+public readonly record struct FugitiveCapturedEvent(EntityUid FugitiveEntityUid, EntityUid? FugitiveMindId);

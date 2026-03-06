@@ -899,6 +899,7 @@
         nameSegments:
         - NamesFirst
         - NamesLast
+      - type: FugitiveCaptureTarget
       startingGear: FugitiveGear
       mindRoles:
       - MindRoleFugitive

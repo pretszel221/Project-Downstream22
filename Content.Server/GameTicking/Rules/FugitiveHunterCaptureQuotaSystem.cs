@@ -42,7 +42,7 @@ public sealed class FugitiveHunterCaptureQuotaSystem : EntitySystem
         var query = EntityQueryEnumerator<FugitiveRuleComponent, GameRuleComponent>();
         while (query.MoveNext(out _, out var fugitiveRule, out _))
         {
-            return (fugitiveRule.CapturedFugitiveMinds.Count, fugitiveRule.TotalFugitives);
+            return (fugitiveRule.CapturedFugitives, fugitiveRule.TotalFugitives);
         }
 
         return (0, 0);

@@ -195,8 +195,11 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         var query = EntityQueryEnumerator<FugitiveRuleComponent, GameRuleComponent>();
         while (query.MoveNext(out _, out var rule, out _))
         {
-            rule.CapturedFugitiveMinds.Add(args.FugitiveMindId);
+            if (args.FugitiveMindId is { } mindId)
+                rule.CapturedFugitiveMinds.Add(mindId);
+
             rule.TotalFugitives = Math.Max(rule.TotalFugitives, rule.FugitiveMinds.Count);
+            rule.CapturedFugitives = Math.Min(rule.CapturedFugitives + 1, rule.TotalFugitives);
             break;
         }
     }

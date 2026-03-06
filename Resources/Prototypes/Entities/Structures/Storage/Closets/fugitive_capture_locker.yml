@@ -11,5 +11,8 @@
   - type: FugitiveCaptureLocker
   - type: Transform
     anchored: true
+  - type: Anchorable
+    flags:
+    - Anchorable
   - type: EntityStorage
     airtight: true

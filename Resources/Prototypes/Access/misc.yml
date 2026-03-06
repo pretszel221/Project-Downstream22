@@ -65,3 +65,7 @@
   id: General
   tags:
   - Maintenance
+
+- type: accessLevel
+  id: FugitiveHunter
+  name: id-card-access-level-fugitive-hunter

@@ -14,6 +14,9 @@ public sealed partial class FugitiveRuleComponent : Component
     public int TotalFugitives;
 
     [DataField]
+    public int CapturedFugitives;
+
+    [DataField]
     public HashSet<EntityUid> FugitiveMinds = new();
 
     [DataField]
