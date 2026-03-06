@@ -56,15 +56,15 @@ public sealed class FugitiveCaptureLockerSystem : EntitySystem
             if (!TryComp<FugitiveCaptureTargetComponent>(occupant, out var target) || target.Captured)
                 continue;
 
-            if (!TryGetFugitiveMind(occupant, out var fugitiveMindEnt))
+            if (!TryGetFugitiveMind(occupant, out var fugitiveMind))
                 continue;
 
             target.Captured = true;
 
-            _ghost.SpawnGhost(fugitiveMindEnt.Value, spawnPosition: Transform(locker).Coordinates, canReturn: false);
+            _ghost.SpawnGhost(fugitiveMind, spawnPosition: Transform(locker).Coordinates, canReturn: false);
             QueueDel(occupant);
 
-            var ev = new FugitiveCapturedEvent(occupant, fugitiveMindEnt.Value.Owner);
+            var ev = new FugitiveCapturedEvent(occupant, fugitiveMind.Owner);
             RaiseLocalEvent(ev);
             capturedAny = true;
         }
@@ -75,9 +75,9 @@ public sealed class FugitiveCaptureLockerSystem : EntitySystem
             _popup.PopupEntity(Loc.GetString("fugitive-capture-locker-incorrect-target"), locker, user);
     }
 
-    private bool TryGetFugitiveMind(EntityUid occupant, out Entity<MindComponent>? fugitiveMind)
+    private bool TryGetFugitiveMind(EntityUid occupant, out Entity<MindComponent?> fugitiveMind)
     {
-        fugitiveMind = null;
+        fugitiveMind = default;
 
         if (!_mind.TryGetMind(occupant, out var mindId, out var mind))
             return false;

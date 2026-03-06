@@ -251,7 +251,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             if (!TryComp<FugitiveBountyPinpointerComponent>(item, out var bounty))
                 continue;
 
-            ResetBountyTracker(item, bounty, pinpointer);
+            ResetBountyTracker(item, bounty, pinpointer, rule.BountyNoTargetLoc);
         }
     }
 
@@ -302,7 +302,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             bounty.ActiveTracking = true;
             bounty.TimeRemaining = bounty.ActiveSeconds;
 
-            var suitTarget = trackedClothingTargets.Count == 0
+            EntityUid? suitTarget = trackedClothingTargets.Count == 0
                 ? null
                 : trackedClothingTargets[RobustRandom.Next(trackedClothingTargets.Count)];
 
