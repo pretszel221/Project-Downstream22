@@ -30,6 +30,7 @@
       state: handcuff
   - type: TargetObjective
     title: objective-condition-capture-person-title
+  - type: FugitiveHunterCaptureCondition
 
 
 - type: entity

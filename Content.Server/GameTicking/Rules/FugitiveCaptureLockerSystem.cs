@@ -57,7 +57,6 @@ public sealed class FugitiveCaptureLockerSystem : EntitySystem
                 continue;
 
             fugitiveTarget.Captured = true;
-            Dirty(occupant, fugitiveTarget);
 
             EntityUid? fugitiveMindId = null;
             MindComponent? fugitiveMind = null;
