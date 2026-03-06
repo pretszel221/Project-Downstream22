@@ -861,7 +861,7 @@ entities:
     - type: Transform
       pos: -2.5,7.5
       parent: 1
-  - uid: 188
+  - uid: 5001
     components:
     - type: Transform
       pos: -1.5,2.5
