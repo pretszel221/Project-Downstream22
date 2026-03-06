@@ -1379,15 +1379,3 @@ entities:
     - type: Transform
       pos: -3.5,7.5
       parent: 1
-- proto: SpawnPointGhostFugitiveHunter
-  entities:
-  - uid: 3001
-    components:
-    - type: Transform
-      pos: -0.5,2.5
-      parent: 1
-  - uid: 3002
-    components:
-    - type: Transform
-      pos: -2.5,7.5
-      parent: 1

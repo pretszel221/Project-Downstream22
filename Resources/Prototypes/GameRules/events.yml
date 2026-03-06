@@ -884,7 +884,7 @@
     definitions:
     - prefRoles: [ Fugitive ]
       min: 3
-      max: 4
+      max: 3
       playerRatio: 15
       pickPlayer: true
       briefing:
@@ -902,7 +902,7 @@
       - MindRoleFugitive
     - prefRoles: [ FugitiveHunter ]
       min: 3
-      max: 4
+      max: 3
       playerRatio: 15
       pickPlayer: false
       spawnerPrototype: SpawnPointGhostFugitiveHunter
