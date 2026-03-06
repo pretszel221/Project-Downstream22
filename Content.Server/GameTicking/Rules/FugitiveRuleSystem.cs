@@ -20,6 +20,8 @@ using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Roles;
 using Content.Shared.Pinpointer;
+using Content.Shared.Examine;
+using System;
 using System.Linq;
 using Robust.Server.GameObjects;
 using Robust.Shared.GameObjects;
@@ -63,6 +65,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         SubscribeLocalEvent<FugitiveRuleComponent, AfterAntagEntitySelectedEvent>(OnAfterAntagSelected);
         SubscribeLocalEvent<FugitiveRoleComponent, GetBriefingEvent>(OnFugitiveBriefing);
         SubscribeLocalEvent<FugitiveHunterRoleComponent, GetBriefingEvent>(OnFugitiveHunterBriefing);
+        SubscribeLocalEvent<FugitiveBountyPinpointerComponent, ExaminedEvent>(OnBountyTrackerExamined);
     }
 
     protected override void Added(EntityUid uid, FugitiveRuleComponent component, GameRuleComponent gameRule, GameRuleAddedEvent args)
@@ -70,16 +73,19 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         base.Added(uid, component, gameRule, args);
 
         EntityUid? shuttle = null;
-        var startIndex = RobustRandom.Next(component.HunterShuttles.Count);
-        for (var offset = 0; offset < component.HunterShuttles.Count; offset++)
+        if (component.HunterShuttles.Count > 0)
         {
-            var index = (startIndex + offset) % component.HunterShuttles.Count;
-            var shuttleProto = component.HunterShuttles[index];
-            if (!_gridPreloader.TryGetPreloadedGrid(shuttleProto, out var loadedShuttle) || loadedShuttle is not { } loaded)
-                continue;
+            var startIndex = RobustRandom.Next(component.HunterShuttles.Count);
+            for (var offset = 0; offset < component.HunterShuttles.Count; offset++)
+            {
+                var index = (startIndex + offset) % component.HunterShuttles.Count;
+                var shuttleProto = component.HunterShuttles[index];
+                if (!_gridPreloader.TryGetPreloadedGrid(shuttleProto, out var loadedShuttle) || loadedShuttle is not { } loaded)
+                    continue;
 
-            shuttle = loaded;
-            break;
+                shuttle = loaded;
+                break;
+            }
         }
 
         if (shuttle is not { } hunterShuttle)
@@ -258,10 +264,6 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 
     private void ConfigureHunterTrackers(EntityUid hunter, FugitiveRuleComponent rule)
     {
-        var fugitiveTarget = GetMindsWithRole<FugitiveRoleComponent>()
-            .Select(m => m.Comp.OwnedEntity)
-            .FirstOrDefault(uid => uid != null);
-
         foreach (var item in _inventory.GetHandOrInventoryEntities(hunter))
         {
             if (!TryComp<PinpointerComponent>(item, out var pinpointer))
@@ -275,15 +277,76 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
                 continue;
             }
 
-            if (!HasComp<FugitiveBountyPinpointerComponent>(item))
+            if (!TryComp<FugitiveBountyPinpointerComponent>(item, out var bounty))
                 continue;
 
-            var targetName = fugitiveTarget == null
-                ? Loc.GetString("fugitive-hunter-bounty-pinpointer-no-target")
-                : Name(fugitiveTarget.Value);
+            bounty.ActiveTracking = false;
+            bounty.TimeRemaining = bounty.CooldownSeconds;
+            _pinpointer.SetTargetWithCustomName(item, null, Loc.GetString("fugitive-hunter-bounty-pinpointer-no-target"), pinpointer);
+            _pinpointer.SetActive(item, false, pinpointer);
+        }
+    }
 
-            _pinpointer.SetTargetWithCustomName(item, fugitiveTarget, targetName, pinpointer);
-            _pinpointer.SetActive(item, true, pinpointer);
+    private EntityUid? GetRandomFugitiveJumpsuit()
+    {
+        var suits = new List<EntityUid>();
+        foreach (var fugitiveMind in GetMindsWithRole<FugitiveRoleComponent>())
+        {
+            if (fugitiveMind.Comp.OwnedEntity is not { } fugitive)
+                continue;
+
+            if (_inventory.TryGetSlotEntity(fugitive, "jumpsuit", out var jumpsuit))
+                suits.Add(jumpsuit);
+        }
+
+        if (suits.Count == 0)
+            return null;
+
+        return RobustRandom.Pick(suits);
+    }
+
+    private void OnBountyTrackerExamined(Entity<FugitiveBountyPinpointerComponent> ent, ref ExaminedEvent args)
+    {
+        var seconds = (int) Math.Ceiling(Math.Max(0f, ent.Comp.TimeRemaining));
+        var state = ent.Comp.ActiveTracking
+            ? Loc.GetString("fugitive-hunter-bounty-pinpointer-state-active")
+            : Loc.GetString("fugitive-hunter-bounty-pinpointer-state-cooldown");
+
+        args.PushMarkup(Loc.GetString("fugitive-hunter-bounty-pinpointer-countdown",
+            ("state", state),
+            ("seconds", seconds)));
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        var query = EntityQueryEnumerator<FugitiveBountyPinpointerComponent, PinpointerComponent>();
+        while (query.MoveNext(out var uid, out var bounty, out var pinpointer))
+        {
+            bounty.TimeRemaining -= frameTime;
+            if (bounty.TimeRemaining > 0f)
+                continue;
+
+            if (bounty.ActiveTracking)
+            {
+                bounty.ActiveTracking = false;
+                bounty.TimeRemaining = bounty.CooldownSeconds;
+                _pinpointer.SetTargetWithCustomName(uid, null, Loc.GetString("fugitive-hunter-bounty-pinpointer-no-target"), pinpointer);
+                _pinpointer.SetActive(uid, false, pinpointer);
+                continue;
+            }
+
+            bounty.ActiveTracking = true;
+            bounty.TimeRemaining = bounty.ActiveSeconds;
+
+            var suitTarget = GetRandomFugitiveJumpsuit();
+            var targetName = suitTarget == null
+                ? Loc.GetString("fugitive-hunter-bounty-pinpointer-no-target")
+                : Loc.GetString("fugitive-hunter-bounty-pinpointer-jumpsuit-target", ("jumpsuit", Name(suitTarget.Value)));
+
+            _pinpointer.SetTargetWithCustomName(uid, suitTarget, targetName, pinpointer);
+            _pinpointer.SetActive(uid, suitTarget != null, pinpointer);
         }
     }
 

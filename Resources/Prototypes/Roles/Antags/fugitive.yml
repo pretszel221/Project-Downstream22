@@ -16,11 +16,19 @@
   setPreference: true
   objective: roles-antag-fugitive-hunter-objective
 
+- type: entity
+  parent: ClothingUniformJumpsuitColorGrey
+  id: ClothingUniformJumpsuitPassengerUnremoveable
+  name: passenger jumpsuit
+  suffix: Unremoveable
+  components:
+  - type: Unremoveable
+
 - type: startingGear
   id: FugitiveGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitColorOrange
-    shoes: ClothingShoesColorOrange
+    jumpsuit: ClothingUniformJumpsuitPassengerUnremoveable
+    shoes: ClothingShoesColorBlack
     gloves: ClothingHandsGlovesArcGloves
     back: ToolboxMechanicalFilled
     belt: ClothingBeltUtility
@@ -50,7 +58,7 @@
   parent: PinpointerUniversal
   id: PinpointerFugitiveBounty
   name: fugitive bounty tracker
-  description: A pinpointer configured to continuously track fugitive bounties.
+  description: A periodic tracker that pings fugitive jumpsuits every few minutes.
   components:
   - type: Pinpointer
     canRetarget: false

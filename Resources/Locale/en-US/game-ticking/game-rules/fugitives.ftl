@@ -18,3 +18,7 @@ fugitive-hunter-role-briefing = Fugitive bounties: {$fugitives}
 fugitive-hunter-role-briefing-no-targets = Fugitive bounties: pending assignment.
 fugitive-hunter-ship-pinpointer-target = hunter insertion ship
 fugitive-hunter-bounty-pinpointer-no-target = unassigned fugitive bounty
+fugitive-hunter-bounty-pinpointer-jumpsuit-target = fugitive jumpsuit: {$jumpsuit}
+fugitive-hunter-bounty-pinpointer-state-active = active ping
+fugitive-hunter-bounty-pinpointer-state-cooldown = cooldown
+fugitive-hunter-bounty-pinpointer-countdown = Tracker {$state}. Next state change in {$seconds}s.
