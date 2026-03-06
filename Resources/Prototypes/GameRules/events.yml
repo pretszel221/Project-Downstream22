@@ -875,7 +875,6 @@
       Death: 80
   - type: RuleGrids
   - type: FugitiveRule
-    hunterShuttles: [ ShuttleFugitiveShip ]
   - type: AntagLoadProfileRule
     speciesOverride: Human
     speciesOverrideBlacklist:

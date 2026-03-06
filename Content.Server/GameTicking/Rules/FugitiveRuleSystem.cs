@@ -69,9 +69,6 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
     {
         base.Added(uid, component, gameRule, args);
 
-        if (component.HunterShuttles.Count == 0)
-            return;
-
         EntityUid? shuttle = null;
         var startIndex = RobustRandom.Next(component.HunterShuttles.Count);
         for (var offset = 0; offset < component.HunterShuttles.Count; offset++)

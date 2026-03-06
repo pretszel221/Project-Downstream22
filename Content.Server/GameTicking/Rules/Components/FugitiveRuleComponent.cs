@@ -11,10 +11,7 @@ namespace Content.Server.GameTicking.Rules.Components;
 public sealed partial class FugitiveRuleComponent : Component
 {
     [DataField]
-    public List<ProtoId<PreloadedGridPrototype>> HunterShuttles = new()
-    {
-        "ShuttleFugitiveShip",
-    };
+    public List<ProtoId<PreloadedGridPrototype>> HunterShuttles = new();
 
     [DataField]
     public HashSet<EntityUid> HunterShuttleGrids = new();
