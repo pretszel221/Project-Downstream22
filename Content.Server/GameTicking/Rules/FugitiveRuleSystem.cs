@@ -306,29 +306,23 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         var fugitives = GetMindsWithRole<FugitiveRoleComponent>();
         var hunters = GetMindsWithRole<FugitiveHunterRoleComponent>();
 
-        var totalFugitives = fugitives.Count;
+        var totalFugitives = Math.Max(component.TotalFugitives, fugitives.Count);
         var aliveFugitives = 0;
-        var capturedFugitives = 0;
-        var capturedAliveFugitives = 0;
 
         foreach (var mind in fugitives)
         {
             var entity = mind.Comp.OwnedEntity;
-            if (entity == null)
-                continue;
-
-            var alive = _mobState.IsAlive(entity.Value);
-            if (alive)
+            if (entity != null && _mobState.IsAlive(entity.Value))
                 aliveFugitives++;
-
-            if (IsOnHunterShuttle(entity.Value, component))
-            {
-                capturedFugitives++;
-                if (alive)
-                    capturedAliveFugitives++;
-            }
         }
 
+        var capturedFugitives = Math.Min(component.CapturedFugitives, totalFugitives);
+        var deadFugitives = Math.Max(0, totalFugitives - aliveFugitives);
+        var capturedAliveFugitives = Math.Max(0, capturedFugitives - deadFugitives);
+        capturedAliveFugitives = Math.Min(capturedAliveFugitives, aliveFugitives);
+        var capturedDeadFugitives = Math.Max(0, capturedFugitives - capturedAliveFugitives);
+
+        var totalHunters = hunters.Count;
         var aliveHunters = 0;
         foreach (var mind in hunters)
         {
@@ -337,7 +331,8 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
                 aliveHunters++;
         }
 
-        var allHuntersDead = hunters.Count > 0 && aliveHunters == 0;
+        var deadHunters = Math.Max(0, totalHunters - aliveHunters);
+        var allHuntersDead = totalHunters > 0 && aliveHunters == 0;
 
         var outcome = GetOutcome(totalFugitives, aliveFugitives, capturedFugitives, capturedAliveFugitives, allHuntersDead);
         args.AddLine(Loc.GetString($"fugitive-round-end-{outcome}"));
@@ -345,10 +340,13 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         args.AddLine(Loc.GetString("fugitive-round-end-counts",
             ("fugitives", totalFugitives),
             ("alive", aliveFugitives),
+            ("dead", deadFugitives),
             ("captured", capturedFugitives),
             ("capturedAlive", capturedAliveFugitives),
-            ("hunters", hunters.Count),
-            ("huntersAlive", aliveHunters)));
+            ("capturedDead", capturedDeadFugitives),
+            ("hunters", totalHunters),
+            ("huntersAlive", aliveHunters),
+            ("huntersDead", deadHunters)));
 
         args.AddLine(Loc.GetString("fugitive-round-end-fugitives-list"));
         foreach (var mind in fugitives)
@@ -399,24 +397,6 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             return "stalemate";
 
         return "minor-fugitive-victory";
-    }
-
-    private bool IsOnHunterShuttle(EntityUid uid, FugitiveRuleComponent comp)
-    {
-        var xform = Transform(uid);
-        if (xform.GridUid is { } grid && comp.HunterShuttleGrids.Contains(grid))
-            return true;
-
-        var parent = xform.ParentUid;
-        while (parent.IsValid() && TryComp(parent, out TransformComponent? parentXform))
-        {
-            if (parentXform.GridUid is { } parentGrid && comp.HunterShuttleGrids.Contains(parentGrid))
-                return true;
-
-            parent = parentXform.ParentUid;
-        }
-
-        return false;
     }
 
     private List<Entity<MindComponent>> GetMindsWithRole<TRole>() where TRole : IComponent

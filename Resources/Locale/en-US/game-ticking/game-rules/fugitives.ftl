@@ -8,7 +8,7 @@ fugitive-round-end-major-security-victory = Major Security Victory: The hunters 
 fugitive-round-end-badass-security-victory = Badass Security Victory: These extraordinary hunters managed to capture every fugitive, alive!
 fugitive-round-end-postmortem-security-victory = Postmortem Security Victory: The hunters managed to capture every fugitive, but all of them died! Spooky!
 
-fugitive-round-end-counts = Fugitives: {$fugitives} total, {$alive} alive, {$captured} captured ({$capturedAlive} alive). Hunters: {$hunters} total, {$huntersAlive} alive.
+fugitive-round-end-counts = Fugitives: {$fugitives} total, {$alive} alive, {$dead} dead, {$captured} captured ({$capturedAlive} alive / {$capturedDead} dead). Hunters: {$hunters} total, {$huntersAlive} alive, {$huntersDead} dead.
 fugitive-round-end-fugitives-list = Fugitives:
 fugitive-round-end-hunters-list = Hunters:
 fugitive-round-end-player-entry = - {$name} ({$user})
