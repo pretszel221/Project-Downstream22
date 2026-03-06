@@ -848,24 +848,6 @@ entities:
     - type: Transform
       pos: -3.5,-2.5
       parent: 1
-- proto: SpawnPointGhostFugitive
-  entities:
-  - uid: 69
-    components:
-    - type: Transform
-      rot: -1.5707963267948966 rad
-      pos: -0.5,2.5
-      parent: 1
-  - uid: 187
-    components:
-    - type: Transform
-      pos: -2.5,7.5
-      parent: 1
-  - uid: 5001
-    components:
-    - type: Transform
-      pos: -1.5,2.5
-      parent: 1
 - proto: PlasticFlapsAirtightClear
   entities:
   - uid: 116
@@ -1384,24 +1366,6 @@ entities:
     - type: Transform
       pos: -3.5,7.5
       parent: 1
-- proto: SpawnPointGhostFugitiveHunter
-  entities:
-  - uid: 3001
-    components:
-    - type: Transform
-      pos: -0.5,2.5
-      parent: 1
-  - uid: 3002
-    components:
-    - type: Transform
-      pos: -2.5,7.5
-      parent: 1
-  - uid: 3003
-    components:
-    - type: Transform
-      pos: -1.5,2.5
-      parent: 1
-
 - proto: LockerFugitiveCapture
   entities:
   - uid: 4001
