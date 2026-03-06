@@ -18,11 +18,21 @@ using Content.Shared.Roles;
 using Content.Shared.Pinpointer;
 using System.Linq;
 using Robust.Server.GameObjects;
+using Robust.Shared.GameObjects;
 
 namespace Content.Server.GameTicking.Rules;
 
 public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 {
+    private static readonly HashSet<string> MaintenanceSpawnerPrototypes = new()
+    {
+        "MaintenanceFluffSpawner",
+        "MaintenanceToolSpawner",
+        "MaintenanceWeaponSpawner",
+        "MaintenancePlantSpawner",
+        "MaintenanceInsulsSpawner",
+    };
+
     [Dependency] private readonly GridPreloaderSystem _gridPreloader = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;
     [Dependency] private readonly MapSystem _map = default!;
@@ -66,7 +76,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
     {
         if (args.Def.PrefRoles.Contains("Fugitive"))
         {
-            if (TryFindRandomTile(out _, out _, out _, out var coords))
+            if (TryFindMaintenanceCoordinates(out var coords) || TryFindRandomTile(out _, out _, out _, out coords))
                 _xform.SetCoordinates(args.EntityUid, coords);
 
             UpdateHunterTrackers(ent.Comp);
@@ -77,6 +87,34 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             return;
 
         ConfigureHunterTrackers(args.EntityUid, ent.Comp);
+    }
+
+    private bool TryFindMaintenanceCoordinates(out EntityCoordinates coords)
+    {
+        coords = EntityCoordinates.Invalid;
+
+        if (!TryGetRandomStation(out var station))
+            return false;
+
+        var stationMap = Transform(station.Value).MapID;
+        var candidates = new List<EntityCoordinates>();
+        var query = EntityQueryEnumerator<TransformComponent, MetaDataComponent>();
+        while (query.MoveNext(out _, out var xform, out var metadata))
+        {
+            if (xform.MapID != stationMap)
+                continue;
+
+            if (metadata.EntityPrototype?.ID is not { } protoId || !MaintenanceSpawnerPrototypes.Contains(protoId))
+                continue;
+
+            candidates.Add(xform.Coordinates);
+        }
+
+        if (candidates.Count == 0)
+            return false;
+
+        coords = RobustRandom.Pick(candidates);
+        return true;
     }
 
     private void OnFugitiveBriefing(Entity<FugitiveRoleComponent> ent, ref GetBriefingEvent args)

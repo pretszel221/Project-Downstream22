@@ -882,8 +882,7 @@
       min: 3
       max: 4
       playerRatio: 15
-      pickPlayer: false
-      spawnerPrototype: SpawnPointGhostFugitive
+      pickPlayer: true
       blacklist:
         components:
         - AntagImmune
