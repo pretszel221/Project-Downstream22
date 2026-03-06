@@ -237,7 +237,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         _mind.TryAddObjective(hunterMindId, hunterMind, FugitiveHunterCaptureQuotaObjective);
     }
 
-    private void OnFugitiveCaptured(ref FugitiveCapturedEvent args)
+    private void OnFugitiveCaptured(FugitiveCapturedEvent args)
     {
         var query = EntityQueryEnumerator<FugitiveRuleComponent, GameRuleComponent>();
         while (query.MoveNext(out _, out var rule, out _))
