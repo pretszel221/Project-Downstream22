@@ -64,7 +64,7 @@ public sealed class FugitiveCaptureLockerSystem : EntitySystem
             QueueDel(occupant);
 
             var ev = new FugitiveCapturedEvent(mindId);
-            RaiseLocalEvent(ref ev);
+            RaiseLocalEvent(ev);
             _popup.PopupEntity(Loc.GetString("fugitive-capture-locker-success"), locker, user);
             return;
         }
