@@ -16,3 +16,8 @@
     - Anchorable
   - type: EntityStorage
     airtight: true
+
+- type: entity
+  parent: LockerFugitiveCapture
+  id: FugitiveCaptureLocker
+  name: fugitive capture locker

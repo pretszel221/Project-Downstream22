@@ -104,12 +104,14 @@
     shoes: ClothingShoesBootsCombatFilled
     id: CBURNPDA
     pocket1: RadioHandheld
-    pocket2: WeaponLaserGun
+    pocket2: WeaponAdvancedLaser
     belt: ClothingBeltBandolier
   storage:
     back:
     - WeaponShotgunDoubleBarreled
     - BoxShotgunIncendiary
+    - BoxShotgunIncendiary
+    - MagazineShotgunIncendiary
     - GrenadeFlashBang
     - PillAmbuzolPlus
     - PillAmbuzol

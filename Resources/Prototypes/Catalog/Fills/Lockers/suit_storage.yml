@@ -461,3 +461,17 @@
         - id: ClothingOuterHardsuitWizard
         - id: ClothingMaskBreath
         - id: JetpackVoidFilled
+
+
+- type: entity
+  id: SuitStorageCBURN
+  parent: SuitStorageBase
+  suffix: CBURN
+  components:
+  - type: StorageFill
+    contents:
+      - id: OxygenTankFilled
+      - id: NitrogenTankFilled
+      - id: ClothingOuterHardsuitCBURN
+      - id: ClothingHeadHelmetCBURN
+      - id: ClothingMaskGasERT

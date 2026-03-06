@@ -325,12 +325,15 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         var (fugitives, hunters) = GetFugitiveAndHunterMinds();
         var stats = ComputeRoundEndStats(component, fugitives, hunters);
 
-        var outcome = GetOutcome(stats.TotalFugitives,
-            stats.AliveFugitives,
-            stats.CapturedFugitives,
-            stats.CapturedAliveFugitives,
-            stats.AllHuntersDead);
-        args.AddLine(Loc.GetString($"fugitive-round-end-{outcome}"));
+        var outcome = component.FugitivesAreInitialInfected
+            ? GetCburnOutcome(stats.TotalFugitives, stats.CapturedFugitives, stats.TotalHunters, stats.AliveHunters)
+            : GetOutcome(stats.TotalFugitives,
+                stats.AliveFugitives,
+                stats.CapturedFugitives,
+                stats.CapturedAliveFugitives,
+                stats.AllHuntersDead);
+        var outcomePrefix = component.FugitivesAreInitialInfected ? "cburn-round-end" : "fugitive-round-end";
+        args.AddLine(Loc.GetString($"{outcomePrefix}-{outcome}"));
 
         args.AddLine(Loc.GetString("fugitive-round-end-counts",
             ("fugitives", stats.TotalFugitives),
@@ -360,6 +363,17 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 
             args.AddLine(Loc.GetString("fugitive-round-end-player-entry", ("name", (object)(mind.Comp.CharacterName ?? "Unknown")), ("user", session.Name)));
         }
+    }
+
+    private static string GetCburnOutcome(int totalFugitives, int capturedFugitives, int totalHunters, int aliveHunters)
+    {
+        if (totalFugitives > 0 && capturedFugitives >= totalFugitives)
+            return "major-cburn-victory";
+
+        if (totalHunters > 0 && aliveHunters == 0)
+            return "bad-ending";
+
+        return "neutral-outcome";
     }
 
     private static string GetOutcome(int totalFugitives, int aliveFugitives, int capturedFugitives, int capturedAliveFugitives, bool allHuntersDead)

@@ -936,7 +936,7 @@
       Death: 80
   - type: RuleGrids
   - type: LoadMapRule
-    gridPath: /Maps/_Funkystation/Shuttles/ERTShuttles/ERTBurnWagonV2.yml
+    gridPath: /Maps/Shuttles/ShuttleEvent/fugitive_cburn_ship.yml
   - type: FugitiveRule
     fugitivePrefRole: InitialInfected
     fugitiveObjectivePrototype: InitialInfectedFugitiveObjective

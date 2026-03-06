@@ -26,7 +26,7 @@ fugitive-hunter-bounty-pinpointer-countdown = Tracker {$state}. Next state chang
 fugitive-capture-locker-confirm = Confirm Capture
 fugitive-capture-locker-success = Fugitive captured.
 fugitive-capture-locker-incorrect-target = Incorrect Target
-fugitive-hunter-capture-quota-title = Capture fugitives ({$captured}/{$total})
+fugitive-hunter-capture-quota-title = These fugitive(s) are wanted and must be brought dead or alive ({$captured}/{$total})
 
 objective-issuer-greyhold = [color=silver]Greyhold Mercenary Company[/color]
 
@@ -37,3 +37,8 @@ cburn-hunter-ship-pinpointer-target = CBURN response shuttle
 cburn-hunter-capture-contain-title = Stop the outbreak from spreading ({$captured}/{$total})
 cburn-hunter-capture-reclaim-title = Reclaim each of the lab experiments ({$captured}/{$total})
 objective-issuer-nanotrasen = [color=deepskyblue]Nanotrasen[/color]
+
+
+cburn-round-end-major-cburn-victory = CBURN Has achieved complete victory! The crew doesn't need to know why or how these infected ended up on their ship, that is for us.. not them to know.
+cburn-round-end-neutral-outcome = CBURN fails to retrieve the bodies, a stern talking to will be given by their superiors.
+cburn-round-end-bad-ending = CBURN fails and the research is not developed further. At what point is it no longer ethical? We all died... and for what...?
