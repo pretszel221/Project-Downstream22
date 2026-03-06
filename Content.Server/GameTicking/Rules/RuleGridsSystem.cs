@@ -61,15 +61,15 @@ public sealed class RuleGridsSystem : GameRuleSystem<RuleGridsComponent>
         var query = EntityQueryEnumerator<SpawnPointComponent, TransformComponent>();
         while (query.MoveNext(out var uid, out _, out var xform))
         {
-            if (xform.MapID != ent.Comp.Map)
-                continue;
-
+            // Grids tracked by this rule may move across maps (e.g. shuttle FTL transitions).
+            // Use grid ownership as the source of truth instead of the originally loaded map id.
             if (xform.GridUid is not {} grid || !ent.Comp.MapGrids.Contains(grid))
                 continue;
 
             if (_whitelist.IsWhitelistFail(ent.Comp.SpawnerWhitelist, uid))
                 continue;
 
+            ent.Comp.Map = xform.MapID;
             args.Coordinates.Add(_transform.GetMapCoordinates(xform));
         }
     }
