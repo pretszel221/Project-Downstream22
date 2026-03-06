@@ -13,7 +13,7 @@ public sealed partial class FugitiveRuleComponent : Component
     [DataField]
     public List<ProtoId<PreloadedGridPrototype>> HunterShuttles = new()
     {
-        "ShuttleCargoLost",
+        "ShuttleFugitiveShip",
     };
 
     [DataField]

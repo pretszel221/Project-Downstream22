@@ -91,7 +91,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             // even if preloaded grids are unavailable.
             _map.CreateMap(out var mapId);
             var opts = DeserializationOptions.Default with { InitializeMaps = true };
-            if (!_mapLoader.TryLoadGrid(mapId, new ResPath("/Maps/Shuttles/ShuttleEvent/lost_cargo.yml"), out var loadedGrid, opts))
+            if (!_mapLoader.TryLoadGrid(mapId, new ResPath("/Maps/Shuttles/ShuttleEvent/fugitive_ship.yml"), out var loadedGrid, opts))
             {
                 Log.Error($"Failed to load any fugitive hunter shuttle for rule {ToPrettyString(uid)}.");
                 ForceEndSelf(uid, gameRule);
