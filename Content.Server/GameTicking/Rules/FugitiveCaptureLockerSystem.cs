@@ -11,7 +11,7 @@ using Content.Shared.Cuffs.Components;
 using Content.Shared.GameTicking.Components;
 using Content.Shared.Mind;
 using Robust.Server.GameObjects;
-using Robust.Shared.Verbs;
+using Content.Shared.Verbs;
 
 namespace Content.Server.GameTicking.Rules;
 
