@@ -22,3 +22,7 @@ fugitive-hunter-bounty-pinpointer-jumpsuit-target = fugitive jumpsuit: {$jumpsui
 fugitive-hunter-bounty-pinpointer-state-active = active ping
 fugitive-hunter-bounty-pinpointer-state-cooldown = cooldown
 fugitive-hunter-bounty-pinpointer-countdown = Tracker {$state}. Next state change in {$seconds}s.
+fugitive-capture-locker-confirm = Confirm Capture
+fugitive-capture-locker-success = Fugitive captured.
+fugitive-capture-locker-incorrect-target = Incorrect Target
+fugitive-hunter-capture-quota-title = Capture fugitives ({$captured}/{$total})

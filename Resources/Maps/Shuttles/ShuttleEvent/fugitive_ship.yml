@@ -1401,3 +1401,11 @@ entities:
     - type: Transform
       pos: -1.5,2.5
       parent: 1
+
+- proto: LockerFugitiveCapture
+  entities:
+  - uid: 4001
+    components:
+    - type: Transform
+      pos: -4.5,2.5
+      parent: 1

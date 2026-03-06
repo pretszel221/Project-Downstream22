@@ -5,7 +5,6 @@
 using Content.Server.Antag;
 using Content.Server.GameTicking.Rules.Components;
 using Content.Server.GridPreloader;
-using Content.Server.Antag.Components;
 using Content.Server.Inventory;
 using Content.Server.Objectives;
 using Content.Server.Objectives.Systems;
@@ -45,6 +44,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 
     private const string FugitiveSurviveObjective = "FugitiveSurviveObjective";
     private const string FugitiveHunterCaptureObjective = "FugitiveHunterCaptureObjective";
+    private const string FugitiveHunterCaptureQuotaObjective = "FugitiveHunterCaptureQuotaObjective";
 
     [Dependency] private readonly GridPreloaderSystem _gridPreloader = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;
@@ -66,6 +66,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         SubscribeLocalEvent<FugitiveRoleComponent, GetBriefingEvent>(OnFugitiveBriefing);
         SubscribeLocalEvent<FugitiveHunterRoleComponent, GetBriefingEvent>(OnFugitiveHunterBriefing);
         SubscribeLocalEvent<FugitiveBountyPinpointerComponent, ExaminedEvent>(OnBountyTrackerExamined);
+        SubscribeLocalEvent<FugitiveCapturedEvent>(OnFugitiveCaptured);
     }
 
     protected override void Added(EntityUid uid, FugitiveRuleComponent component, GameRuleComponent gameRule, GameRuleAddedEvent args)
@@ -125,8 +126,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             if (TryFindMaintenanceCoordinates(out var coords) || TryFindRandomTile(out _, out _, out _, out coords))
                 _xform.SetCoordinates(args.EntityUid, coords);
 
-            if (HasComp<GhostRoleAntagSpawnerComponent>(args.EntityUid))
-                return;
+            RegisterFugitive(ent.Comp, args.EntityUid);
 
             EnsureFugitiveObjective(args.EntityUid);
             UpdateHunterTrackers(ent.Comp);
@@ -134,9 +134,6 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         }
 
         if (!args.Def.PrefRoles.Contains("FugitiveHunter"))
-            return;
-
-        if (HasComp<GhostRoleAntagSpawnerComponent>(args.EntityUid))
             return;
 
         ConfigureHunterTrackers(args.EntityUid, ent.Comp);
@@ -199,6 +196,8 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         if (fugitives.Count == 0)
             return;
 
+        EnsureHunterCaptureQuotaObjective(hunterMindId, hunterMind);
+
         foreach (var fugitive in fugitives)
         {
             if (!_mind.TryGetMind(fugitive, out var fugitiveMindId, out _))
@@ -215,6 +214,39 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         }
     }
 
+
+    private void RegisterFugitive(FugitiveRuleComponent rule, EntityUid fugitive)
+    {
+        if (!_mind.TryGetMind(fugitive, out var mindId, out _))
+            return;
+
+        if (!rule.FugitiveMinds.Add(mindId))
+            return;
+
+        rule.TotalFugitives = rule.FugitiveMinds.Count;
+    }
+
+    private void EnsureHunterCaptureQuotaObjective(EntityUid hunterMindId, MindComponent hunterMind)
+    {
+        foreach (var objective in hunterMind.Objectives)
+        {
+            if (MetaData(objective).EntityPrototype?.ID == FugitiveHunterCaptureQuotaObjective)
+                return;
+        }
+
+        _mind.TryAddObjective(hunterMindId, hunterMind, FugitiveHunterCaptureQuotaObjective);
+    }
+
+    private void OnFugitiveCaptured(ref FugitiveCapturedEvent args)
+    {
+        var query = EntityQueryEnumerator<FugitiveRuleComponent, GameRuleComponent>();
+        while (query.MoveNext(out _, out var rule, out _))
+        {
+            rule.CapturedFugitiveMinds.Add(args.FugitiveMindId);
+            rule.TotalFugitives = Math.Max(rule.TotalFugitives, rule.FugitiveMinds.Count);
+            break;
+        }
+    }
     private bool HasCaptureObjective(MindComponent hunterMind, EntityUid fugitiveMindId)
     {
         foreach (var objective in hunterMind.Objectives)
