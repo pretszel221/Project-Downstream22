@@ -241,7 +241,7 @@ public sealed partial class AdminVerbSystem
         {
             Text = Loc.GetString("admin-verb-text-make-fugitive"),
             Category = VerbCategory.Antag,
-            Icon = new SpriteSpecifier.Rsi(new ResPath("/Textures/Clothing/Uniforms/Jumpsuit/orange.rsi"), "icon"),
+            Icon = new SpriteSpecifier.Rsi(new ResPath("/Textures/Interface/Misc/job_icons.rsi"), "Prisoner"),
             Act = () =>
             {
                 ForceMakeSpecificAntag<FugitiveRuleComponent>(targetPlayer, DefaultFugitiveRule, "Fugitive");

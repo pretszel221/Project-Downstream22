@@ -875,7 +875,7 @@
       Death: 80
   - type: RuleGrids
   - type: FugitiveRule
-    hunterShuttles: [ ShuttleStriker, SyndieEvacPod ]
+    hunterShuttles: [ SyndieEvacPod ]
   - type: AntagLoadProfileRule
     speciesOverride: Human
     speciesOverrideBlacklist:
@@ -890,6 +890,11 @@
       blacklist:
         components:
         - AntagImmune
+      components:
+      - type: RandomMetadata
+        nameSegments:
+        - NamesFirst
+        - NamesLast
       startingGear: FugitiveGear
       mindRoles:
       - MindRoleFugitive
@@ -899,6 +904,11 @@
       playerRatio: 15
       pickPlayer: false
       spawnerPrototype: SpawnPointGhostFugitiveHunter
+      components:
+      - type: RandomMetadata
+        nameSegments:
+        - NamesFirst
+        - NamesLast
       startingGear: FugitiveHunterGear
       mindRoles:
       - MindRoleFugitiveHunter

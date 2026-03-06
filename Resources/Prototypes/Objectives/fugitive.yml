@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2026 OpenAI
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later AND MIT
+
+- type: entity
+  parent: BaseSurviveObjective
+  id: FugitiveSurviveObjective
+  name: Survive.
+  description: Avoid capture and survive until round end.
+  components:
+  - type: Objective
+    difficulty: 1.0
+    issuer: objective-issuer-syndicate
+    icon:
+      sprite: Objects/Misc/handcuffs.rsi
+      state: handcuff
+
+- type: entity
+  parent: [BaseObjective, BaseTargetObjective]
+  id: FugitiveHunterCaptureObjective
+  name: Capture target.
+  description: Capture this fugitive alive.
+  components:
+  - type: Objective
+    difficulty: 1.5
+    issuer: objective-issuer-syndicate
+    unique: false
+    icon:
+      sprite: Objects/Misc/handcuffs.rsi
+      state: handcuff
+  - type: TargetObjective
+    title: objective-condition-capture-person-title
+  - type: KeepAliveCondition

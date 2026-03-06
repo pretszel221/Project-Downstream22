@@ -7,12 +7,15 @@ using Content.Server.GameTicking.Rules.Components;
 using Content.Server.GridPreloader;
 using Content.Server.Antag.Components;
 using Content.Server.Inventory;
+using Content.Server.Objectives;
+using Content.Server.Objectives.Systems;
 using Content.Server.Pinpointer;
 using Content.Server.Roles;
 using Content.Shared.GameTicking;
 using Content.Shared.GameTicking.Components;
 using Content.Shared.Inventory;
 using Content.Shared.Mind;
+using Content.Shared.Objectives.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Roles;
@@ -35,13 +38,18 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         "MaintenanceInsulsSpawner",
     };
 
+    private const string FugitiveSurviveObjective = "FugitiveSurviveObjective";
+    private const string FugitiveHunterCaptureObjective = "FugitiveHunterCaptureObjective";
+
     [Dependency] private readonly GridPreloaderSystem _gridPreloader = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;
     [Dependency] private readonly MapSystem _map = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
     [Dependency] private readonly SharedMindSystem _mind = default!;
+    [Dependency] private readonly ObjectivesSystem _objectives = default!;
     [Dependency] private readonly PinpointerSystem _pinpointer = default!;
     [Dependency] private readonly SharedRoleSystem _role = default!;
+    [Dependency] private readonly TargetObjectiveSystem _targetObjective = default!;
     [Dependency] private readonly TransformSystem _xform = default!;
 
     public override void Initialize()
@@ -100,6 +108,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             if (HasComp<GhostRoleAntagSpawnerComponent>(args.EntityUid))
                 return;
 
+            EnsureFugitiveObjective(args.EntityUid);
             UpdateHunterTrackers(ent.Comp);
             return;
         }
@@ -111,6 +120,7 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
             return;
 
         ConfigureHunterTrackers(args.EntityUid, ent.Comp);
+        EnsureHunterObjectives(args.EntityUid);
     }
 
     private bool TryFindMaintenanceCoordinates(out EntityCoordinates coords)
@@ -139,6 +149,66 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
 
         coords = candidates[RobustRandom.Next(candidates.Count)];
         return true;
+    }
+
+    private void EnsureFugitiveObjective(EntityUid fugitive)
+    {
+        if (!_mind.TryGetMind(fugitive, out var mindId, out var mind))
+            return;
+
+        foreach (var objective in mind.Objectives)
+        {
+            if (MetaData(objective).EntityPrototype?.ID == FugitiveSurviveObjective)
+                return;
+        }
+
+        _mind.TryAddObjective(mindId, mind, FugitiveSurviveObjective);
+    }
+
+    private void EnsureHunterObjectives(EntityUid hunter)
+    {
+        if (!_mind.TryGetMind(hunter, out var hunterMindId, out var hunterMind))
+            return;
+
+        var fugitives = GetMindsWithRole<FugitiveRoleComponent>()
+            .Select(m => m.Comp.OwnedEntity)
+            .Where(uid => uid != null)
+            .Select(uid => uid!.Value)
+            .ToList();
+
+        if (fugitives.Count == 0)
+            return;
+
+        foreach (var fugitive in fugitives)
+        {
+            if (!_mind.TryGetMind(fugitive, out var fugitiveMindId, out _))
+                continue;
+
+            if (HasCaptureObjective(hunterMind, fugitiveMindId))
+                continue;
+
+            if (_objectives.TryCreateObjective(hunterMindId, hunterMind, FugitiveHunterCaptureObjective) is not { } objective)
+                continue;
+
+            _targetObjective.SetTarget(objective, fugitiveMindId);
+            _mind.AddObjective(hunterMindId, hunterMind, objective);
+        }
+    }
+
+    private bool HasCaptureObjective(MindComponent hunterMind, EntityUid fugitiveMindId)
+    {
+        foreach (var objective in hunterMind.Objectives)
+        {
+            if (MetaData(objective).EntityPrototype?.ID != FugitiveHunterCaptureObjective)
+                continue;
+
+            if (!TryComp<TargetObjectiveComponent>(objective, out var target) || target.Target != fugitiveMindId)
+                continue;
+
+            return true;
+        }
+
+        return false;
     }
 
     private void OnFugitiveBriefing(Entity<FugitiveRoleComponent> ent, ref GetBriefingEvent args)

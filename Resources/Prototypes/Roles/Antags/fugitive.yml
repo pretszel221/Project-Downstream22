@@ -21,7 +21,7 @@
   equipment:
     jumpsuit: ClothingUniformJumpsuitColorOrange
     shoes: ClothingShoesColorOrange
-    gloves: ClothingHandsGlovesColorYellow
+    gloves: ClothingHandsGlovesArcGloves
     back: ToolboxMechanicalFilled
     belt: ClothingBeltUtility
     id: PrisonerIDCard
@@ -64,8 +64,8 @@
     shoes: ClothingShoesBootsCombatFilled
     outerClothing: ClothingOuterArmorBasic
     gloves: ClothingHandsGlovesCombat
-    back: ClothingBackpackSecurity
-    belt: ClothingBeltSecurityWebbing
+    back: ClothingBackpackMerc
+    belt: ClothingBeltSecurityFilled
     eyes: ClothingEyesGlassesSunglasses
     ears: ClothingHeadsetSecurity
     id: BountyHunterPDA
@@ -77,5 +77,7 @@
     - MagazinePistol
     - Flash
     - Handcuffs
+    - Handcuffs
+    - Stunbaton
     - PinpointerFugitiveShip
     - PinpointerFugitiveBounty
