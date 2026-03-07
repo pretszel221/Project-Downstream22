@@ -1757,12 +1757,36 @@ entities:
     - type: Transform
       pos: 0.5436061,-7.5129323
       parent: 325
-- proto: SpawnPointNukies
+- proto: SpawnPointGhostFugitiveHunter
   entities:
   - uid: 322
     components:
     - type: Transform
       pos: -0.5,-4.5
+      parent: 325
+
+- proto: SpawnPointGhostFugitiveHunter
+  entities:
+  - uid: 4322
+    components:
+    - type: Transform
+      pos: -1.5,-4.5
+      parent: 325
+
+- proto: SpawnPointGhostFugitiveHunter
+  entities:
+  - uid: 4323
+    components:
+    - type: Transform
+      pos: 0.5,-4.5
+      parent: 325
+
+- proto: SpawnPointGhostFugitiveHunter
+  entities:
+  - uid: 4324
+    components:
+    - type: Transform
+      pos: -0.5,-5.5
       parent: 325
 - proto: StealthBox
   entities:

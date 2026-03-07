@@ -1,0 +1,76 @@
+# SPDX-FileCopyrightText: 2026 OpenAI
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later AND MIT
+
+- type: entity
+  parent: BaseSurviveObjective
+  id: FugitiveSurviveObjective
+  name: Survive.
+  description: Avoid capture and survive until round end.
+  components:
+  - type: Objective
+    difficulty: 1.0
+    issuer: objective-issuer-syndicate
+    icon:
+      sprite: Objects/Misc/handcuffs.rsi
+      state: handcuff
+
+- type: entity
+  parent: BaseObjective
+  id: FugitiveHunterCaptureQuotaObjective
+  name: These fugitive(s) are wanted and must be brought dead or alive.
+  description: These fugitive(s) are wanted and must be brought dead or alive.
+  components:
+  - type: Objective
+    difficulty: 1.0
+    issuer: objective-issuer-greyhold
+    unique: true
+    icon:
+      sprite: Structures/Storage/closet.rsi
+      state: welded
+  - type: FugitiveHunterCaptureQuotaCondition
+
+- type: entity
+  parent: BaseObjective
+  id: InitialInfectedFugitiveObjective
+  name: Nanotrasen needs to pay for what they did to you. You know they may recover your body, so make them pay for it.
+  description: Nanotrasen needs to pay for what they did to you. You know they may recover your body, so make them pay for it.
+  components:
+  - type: Objective
+    difficulty: 1.0
+    issuer: objective-issuer-unknown
+    icon:
+      sprite: Mobs/Species/Human/organs.rsi
+      state: heart-on
+
+- type: entity
+  parent: BaseObjective
+  id: CBURNContainOutbreakObjective
+  name: Stop the outbreak from spreading.
+  description: Stop the outbreak from spreading.
+  components:
+  - type: Objective
+    difficulty: 1.0
+    issuer: objective-issuer-nanotrasen-research-division
+    unique: true
+    icon:
+      sprite: Structures/Storage/closet.rsi
+      state: welded
+  - type: FugitiveHunterCaptureQuotaCondition
+    titleLoc: cburn-hunter-capture-contain-title
+
+- type: entity
+  parent: BaseObjective
+  id: CBURNReclaimExperimentsObjective
+  name: Reclaim each of the lab experiments.
+  description: Reclaim each of the lab experiments.
+  components:
+  - type: Objective
+    difficulty: 1.0
+    issuer: objective-issuer-nanotrasen-research-division
+    unique: true
+    icon:
+      sprite: Structures/Storage/closet.rsi
+      state: welded
+  - type: FugitiveHunterCaptureQuotaCondition
+    titleLoc: cburn-hunter-capture-reclaim-title

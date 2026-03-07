@@ -285,3 +285,114 @@
     - state: green
     - sprite: Clothing/Head/Hats/wizardhat.rsi
       state: icon
+
+- type: entity
+  categories: [ HideSpawnMenu, Spawner ]
+  id: SpawnPointFugitive
+  parent: MarkerBase
+  name: fugitive spawn point
+  components:
+  - type: SpawnPoint
+  - type: Sprite
+    layers:
+    - sprite: Markers/jobs.rsi
+      state: green
+    - sprite: _Funkystation/Clothing/Uniforms/Jumpsuit/color.rsi
+      state: icon
+      color: "#ff8c19"
+
+- type: entity
+  categories: [ HideSpawnMenu, Spawner ]
+  id: SpawnPointFugitiveHunter
+  parent: MarkerBase
+  name: fugitive hunter spawn point
+  components:
+  - type: SpawnPoint
+  - type: Sprite
+    layers:
+    - sprite: Markers/jobs.rsi
+      state: green
+    - sprite: Objects/Misc/handcuffs.rsi
+      state: handcuff
+
+- type: entity
+  categories: [ HideSpawnMenu, Spawner ]
+  parent: BaseAntagSpawner
+  id: SpawnPointGhostFugitive
+  components:
+  - type: GhostRole
+    name: roles-antag-fugitive-name
+    description: roles-antag-fugitive-objective
+    rules: ghost-role-information-antagonist-rules
+    mindRoles:
+    - MindRoleGhostRoleTeamAntagonist
+    raffle:
+      settings: default
+  - type: Sprite
+    layers:
+    - sprite: Markers/jobs.rsi
+      state: green
+    - sprite: _Funkystation/Clothing/Uniforms/Jumpsuit/color.rsi
+      state: icon
+      color: "#ff8c19"
+
+- type: entity
+  categories: [ HideSpawnMenu, Spawner ]
+  parent: BaseAntagSpawner
+  id: SpawnPointGhostFugitiveHunter
+  components:
+  - type: GhostRole
+    name: roles-antag-fugitive-hunter-name
+    description: roles-antag-fugitive-hunter-objective
+    rules: ghost-role-information-freeagent-rules
+    mindRoles:
+    - MindRoleGhostRoleFreeAgent
+    raffle:
+      settings: default
+  - type: Sprite
+    layers:
+    - sprite: Markers/jobs.rsi
+      state: green
+    - sprite: Objects/Misc/handcuffs.rsi
+      state: handcuff
+
+- type: entity
+  categories: [ HideSpawnMenu, Spawner ]
+  parent: BaseAntagSpawner
+  id: SpawnPointGhostEscapedExperiment
+  components:
+  - type: GhostRole
+    name: roles-antag-escaped-experiment-name
+    description: roles-antag-escaped-experiment-objective
+    rules: ghost-role-information-antagonist-rules
+    mindRoles:
+    - MindRoleGhostRoleTeamAntagonist
+    raffle:
+      settings: default
+  - type: Sprite
+    layers:
+    - sprite: Markers/jobs.rsi
+      state: green
+    - sprite: _Funkystation/Clothing/Uniforms/Jumpsuit/color.rsi
+      state: icon
+      color: "#8be6ff"
+
+- type: entity
+  categories: [ HideSpawnMenu, Spawner ]
+  parent: BaseAntagSpawner
+  id: SpawnPointGhostCBURNAgent
+  components:
+  - type: GhostRole
+    name: roles-antag-cburn-agent-name
+    description: roles-antag-cburn-agent-ghost-description
+    rules: ghost-role-information-freeagent-rules
+    mindRoles:
+    - MindRoleGhostRoleFreeAgent
+    raffle:
+      settings: default
+  - type: Sprite
+    layers:
+    - sprite: Markers/jobs.rsi
+      state: green
+    - sprite: _Funkystation/Interface/Misc/job_icons.rsi
+      state: CBURN

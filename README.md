@@ -25,7 +25,7 @@ SPDX-FileCopyrightText: 2025 taydeo <td12233a@gmail.com>
 SPDX-License-Identifier: MIT
 -->
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
-<p align="center"> <img alt="Space Station 14" <img width="880" height="400" alt="logo2" src="https://github.com/user-attachments/assets/f2d58fe6-c1ff-4c36-b6e4-7f1824006966" /></p>
+<p align="center"><img width="880" height="400" alt="Space Station 14" src="https://github.com/user-attachments/assets/f2d58fe6-c1ff-4c36-b6e4-7f1824006966" /></p>
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -35,7 +35,9 @@ If you want to host or create content for SS14, for Goob Station, OR for Funky S
 
 ## Links
 
-[PLACEHOLDER](PLACEHOLDER)
+- [Space Station 14 repository](https://github.com/space-wizards/space-station-14)
+- [Goob Station repository](https://github.com/Goob-Station/Goob-Station)
+- [Funky Station repository](https://github.com/funky-station/funky-station)
 
 ## Documentation/Wiki
 

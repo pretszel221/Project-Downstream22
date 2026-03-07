@@ -74,3 +74,12 @@ roles-antag-dragon-objective = Create a carp army to take over this quadrant.
 
 roles-antag-malfunctioning-ai-name = Malfunctioning AI
 roles-antag-malfunctioning-ai-objective = Sabotage the station as a malfunctioning AI.
+roles-antag-fugitive-name = Fugitive
+roles-antag-fugitive-objective = Avoid capture by the fugitive hunters and survive as your assigned fugitive identity.
+roles-antag-fugitive-hunter-name = Fugitive Hunter
+roles-antag-fugitive-hunter-objective = You are a Bounty Hunter commissioned by the Greyhold Mercenary Company. Hunt down and capture all assigned fugitive bounties.
+roles-antag-escaped-experiment-name = Escaped Experiments
+roles-antag-escaped-experiment-objective = Nanotrasen needs to pay for what they did to you. You know they may recover your body, so make them pay for it.
+roles-antag-cburn-agent-name = CBURN Agent
+roles-antag-cburn-agent-objective = You are a CBURN Operative, Nanotrasen has allowed some of their precious experiments to escape. You need to get it back at all costs, the station can rot but these patients must be recovered, at all costs.
+roles-antag-cburn-agent-ghost-description = You are a CBURN Operative, Nanotrasen has allowed some of their precious experiments to escape. You need to get it back at all costs, the station can rot but these patients must be recovered, at all costs.

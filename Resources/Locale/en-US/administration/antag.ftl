@@ -36,6 +36,12 @@ admin-verb-text-make-head-rev = Make Head Rev
 admin-verb-text-make-thief = Make Thief
 admin-verb-text-make-paradox-clone = Create Paradox Clone
 
+admin-verb-make-fugitive = Make the target into a fugitive.
+admin-verb-make-fugitive-hunter = Make the target into a fugitive hunter.
+
+admin-verb-text-make-fugitive = Make Fugitive
+admin-verb-text-make-fugitive-hunter = Make Fugitive Hunter
+
 admin-overlay-antag-classic = ANTAG
 
 admin-verb-make-wizard = Make the target into a wizard.

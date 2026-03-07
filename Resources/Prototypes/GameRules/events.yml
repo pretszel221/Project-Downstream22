@@ -116,6 +116,8 @@
     - id: FalseAlarm
     - id: DerelictCyborgSpawn
     - id: WizardSpawn
+    - id: FugitivesSpawn
+    - id: FugitivesCBURNOutbreakSpawn
     - id: ColossusSpawn # Funky
 
 - type: entity
@@ -856,3 +858,140 @@
     - SecurityClown
     - PartyMaker
     - CommandMaid
+
+- type: entity
+  id: FugitivesSpawn
+  parent: BaseGameRule
+  components:
+  - type: StationEvent
+    earliestStart: 30
+    minimumPlayers: 25
+    weight: 5
+    duration: null
+    maxOccurrences: 1
+    chaos:
+      Hostile: 40
+      Friend: 40
+      Combat: 80
+      Death: 80
+  - type: RuleGrids
+  - type: LoadMapRule
+    gridPath: /Maps/Shuttles/ShuttleEvent/fugitive_ship.yml
+  - type: FugitiveRule
+  - type: AntagLoadProfileRule
+  - type: AntagSelection
+    definitions:
+    - prefRoles: [ Fugitive ]
+      min: 3
+      max: 3
+      playerRatio: 15
+      pickPlayer: false
+      spawnerPrototype: SpawnPointGhostFugitive
+      briefing:
+        sound: "/Audio/Ambience/Antag/headrev_start.ogg"
+      blacklist:
+        components:
+        - AntagImmune
+      components:
+      - type: RandomMetadata
+        nameSegments:
+        - NamesFirst
+        - NamesLast
+      - type: FugitiveCaptureTarget
+      startingGear: FugitiveGear
+      mindRoles:
+      - MindRoleFugitive
+    - prefRoles: [ FugitiveHunter ]
+      min: 3
+      max: 3
+      playerRatio: 15
+      pickPlayer: false
+      spawnerPrototype: SpawnPointGhostFugitiveHunter
+      components:
+      - type: RandomMetadata
+        nameSegments:
+        - NamesFirst
+        - NamesLast
+      startingGear: FugitiveHunterGear
+      mindRoles:
+      - MindRoleFugitiveHunter
+
+- type: entity
+  id: FugitivesCBURNOutbreakSpawn
+  parent: BaseGameRule
+  components:
+  - type: StationEvent
+    earliestStart: 30
+    minimumPlayers: 25
+    weight: 1
+    duration: null
+    maxOccurrences: 1
+    chaos:
+      Hostile: 40
+      Friend: 40
+      Combat: 80
+      Death: 80
+  - type: RuleGrids
+  - type: LoadMapRule
+    gridPath: /Maps/Shuttles/ShuttleEvent/fugitive_cburn_ship.yml
+  - type: FugitiveRule
+    fugitivePrefRole: InitialInfected
+    fugitiveObjectivePrototype: InitialInfectedFugitiveObjective
+    hunterObjectivePrototypes:
+    - CBURNReclaimExperimentsObjective
+    hunterBriefingPrefLoc: cburn-hunter-role-briefing-preference
+    hunterBriefingTargetsLoc: cburn-hunter-role-briefing
+    hunterBriefingNoTargetsLoc: cburn-hunter-role-briefing-no-targets
+    shipPinpointerTargetLoc: cburn-hunter-ship-pinpointer-target
+    fugitivesAreInitialInfected: true
+    initialInfectedGraceSeconds: 360
+  - type: AntagLoadProfileRule
+  - type: AntagSelection
+    definitions:
+    - prefRoles: [ InitialInfected ]
+      min: 3
+      max: 3
+      playerRatio: 15
+      pickPlayer: false
+      spawnerPrototype: SpawnPointGhostEscapedExperiment
+      briefing:
+        sound: "/Audio/Ambience/Antag/zombie_start.ogg"
+      blacklist:
+        components:
+        - AntagImmune
+      components:
+      - type: RandomMetadata
+        nameSegments:
+        - NamesFirst
+        - NamesLast
+      - type: FugitiveCaptureTarget
+      - type: AutoImplant
+        implants:
+        - FreedomImplant
+      - type: PendingZombie
+        minInitialInfectedGrace: 360
+        maxInitialInfectedGrace: 360
+      - type: ZombifyOnDeath
+      - type: IncurableZombie
+      - type: InitialInfected
+      startingGear: CBURNEscapedExperimentGear
+      mindRoles:
+      - MindRoleEscapedExperiment
+      - MindRoleInitialInfected
+    - prefRoles: [ FugitiveHunter ]
+      min: 3
+      max: 3
+      playerRatio: 15
+      pickPlayer: false
+      spawnerPrototype: SpawnPointGhostCBURNAgent
+      components:
+      - type: RandomMetadata
+        nameSegments:
+        - NamesMilitaryFirst
+        - NamesMilitaryLast
+      - type: AutoImplant
+        implants:
+        - MindShieldImplant
+      startingGear: CBURNFugitiveHunterGear
+      mindRoles:
+      - MindRoleCBURNFugitiveHunter

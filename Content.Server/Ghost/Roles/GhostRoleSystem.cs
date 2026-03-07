@@ -554,10 +554,29 @@ public sealed class GhostRoleSystem : EntitySystem
         if (!_ghostRoles.TryGetValue(identifier, out var role))
             return;
 
-        if (player.AttachedEntity == null)
+        if (!role.Owner.IsValid() || TerminatingOrDeleted(role.Owner) || !TryComp<TransformComponent>(role.Owner, out var roleXform))
+        {
+            _ghostRoles.Remove(identifier);
+            UpdateAllEui();
+            return;
+        }
+
+        // Prevent following entities that are effectively in nullspace / detached from any map-grid hierarchy.
+        if (roleXform.MapUid == null || TerminatingOrDeleted(roleXform.MapUid.Value))
+        {
+            _ghostRoles.Remove(identifier);
+            UpdateAllEui();
+            return;
+        }
+
+        if (player.AttachedEntity is not { } follower ||
+            !follower.IsValid() ||
+            TerminatingOrDeleted(follower) ||
+            !TryComp<TransformComponent>(follower, out var followerXform) ||
+            followerXform.MapUid == null)
             return;
 
-        _followerSystem.StartFollowingEntity(player.AttachedEntity.Value, role);
+        _followerSystem.StartFollowingEntity(follower, role.Owner);
     }
 
     public void GhostRoleInternalCreateMindAndTransfer(ICommonSession player, EntityUid roleUid, EntityUid mob, GhostRoleComponent? role = null)

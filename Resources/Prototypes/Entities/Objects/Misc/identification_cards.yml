@@ -717,6 +717,19 @@
     job: Visitor
 
 - type: entity
+  parent: VisitorIDCard
+  id: BountyHunterIDCard
+  name: bounty hunter ID card
+  description: Marks the wearer as a licensed bounty hunter contractor.
+  components:
+  - type: IdCard
+    jobTitle: Bounty Hunter
+  - type: Access
+    tags:
+    - FugitiveHunter
+
+
+- type: entity
   parent: [IDCardStandard, BaseSecurityContraband]
   id: BrigmedicIDCard
   name: brigmedic ID card

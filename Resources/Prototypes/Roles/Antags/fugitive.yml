@@ -1,0 +1,154 @@
+# SPDX-FileCopyrightText: 2026 OpenAI
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later AND MIT
+
+- type: antag
+  id: Fugitive
+  name: roles-antag-fugitive-name
+  antagonist: true
+  setPreference: true
+  objective: roles-antag-fugitive-objective
+
+- type: antag
+  id: FugitiveHunter
+  name: roles-antag-fugitive-hunter-name
+  antagonist: false
+  setPreference: true
+  objective: roles-antag-fugitive-hunter-objective
+
+- type: antag
+  id: EscapedExperiment
+  name: roles-antag-escaped-experiment-name
+  antagonist: true
+  setPreference: true
+  objective: roles-antag-escaped-experiment-objective
+
+- type: antag
+  id: CBURNAgent
+  name: roles-antag-cburn-agent-name
+  antagonist: false
+  setPreference: true
+  objective: roles-antag-cburn-agent-objective
+
+- type: entity
+  parent: ClothingUniformJumpsuitColorGrey
+  id: ClothingUniformJumpsuitPassengerUnremoveable
+  name: passenger jumpsuit
+  suffix: Unremoveable
+  components:
+  - type: Unremoveable
+
+- type: startingGear
+  id: FugitiveGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitPassengerUnremoveable
+    shoes: ClothingShoesColorBlack
+    gloves: ClothingHandsGlovesArcGloves
+    back: ToolboxMechanicalFilled
+    belt: ClothingBeltUtility
+    id: PrisonerIDCard
+    pocket1: Shiv
+  storage:
+    belt:
+    - CrowbarYellow
+    - Wrench
+    - Screwdriver
+    - Wirecutter
+    - Welder
+    - Multitool
+
+- type: entity
+  parent: PinpointerUniversal
+  id: PinpointerFugitiveShip
+  name: ship return pinpointer
+  description: A pinpointer configured to continuously track the hunter insertion ship.
+  components:
+  - type: Pinpointer
+    canRetarget: false
+    updateTargetName: false
+  - type: FugitiveShipPinpointer
+
+- type: entity
+  parent: PinpointerUniversal
+  id: PinpointerFugitiveBounty
+  name: fugitive bounty tracker
+  description: A periodic tracker that pings fugitive jumpsuits every few minutes.
+  components:
+  - type: Pinpointer
+    canRetarget: false
+    updateTargetName: false
+  - type: FugitiveBountyPinpointer
+
+- type: startingGear
+  id: FugitiveHunterGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    shoes: ClothingShoesBootsCombatFilled
+    outerClothing: ClothingOuterArmorBasic
+    gloves: ClothingHandsGlovesCombat
+    back: ClothingBackpackMerc
+    belt: ClothingBeltSecurity
+    eyes: ClothingEyesGlassesSunglasses
+    ears: ClothingHeadsetSecurity
+    id: BountyHunterPDA
+    pocket1: Zipties
+    pocket2: WeaponPistolMk58
+  storage:
+    back:
+    - MagazinePistol
+    - MagazinePistol
+    - Flash
+    - Handcuffs
+    - Handcuffs
+    - Stunbaton
+    - MedkitAdvancedFilled
+    - PinpointerFugitiveShip
+    - PinpointerFugitiveBounty
+
+- type: startingGear
+  id: CBURNFugitiveHunterGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitColorBrown
+    back: ClothingBackpackDuffelCBURN
+    mask: ClothingMaskGasERT
+    eyes: ClothingEyesGlassesSecurity
+    ears: ClothingHeadsetAltCentCom
+    gloves: ClothingHandsGlovesCombat
+    outerClothing: ClothingOuterHardsuitCBURN
+    shoes: ClothingShoesBootsCombatFilled
+    id: CBURNPDA
+    pocket1: RadioHandheld
+    pocket2: WeaponAdvancedLaser
+    belt: ClothingBeltBandolier
+  storage:
+    back:
+    - WeaponShotgunDoubleBarreled
+    - BoxShotgunIncendiary
+    - BoxShotgunIncendiary
+    - MagazineShotgunIncendiary
+    - GrenadeFlashBang
+    - PillAmbuzolPlus
+    - PillAmbuzol
+    - PinpointerFugitiveShip
+    - PinpointerFugitiveBounty
+
+- type: startingGear
+  id: CBURNEscapedExperimentGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitPassenger
+    shoes: ClothingShoesColorBlack
+    gloves: ClothingHandsGlovesArcGloves
+    back: ToolboxMechanicalFilled
+    belt: ClothingBeltUtility
+    id: PassengerIDCard
+    pocket1: KitchenKnife
+    outerClothing: ClothingOuterWinterCoat
+    ears: ClothingHeadsetGrey
+  storage:
+    belt:
+    - CrowbarYellow
+    - Wrench
+    - Screwdriver
+    - Wirecutter
+    - Welder
+    - Multitool

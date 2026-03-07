@@ -1318,6 +1318,16 @@
     - DoorBumpOpener
 
 - type: entity
+  parent: VisitorPDA
+  id: BountyHunterPDA
+  name: bounty hunter PDA
+  description: A visitor PDA issued to registered bounty hunters.
+  components:
+  - type: Pda
+    id: BountyHunterIDCard
+
+
+- type: entity
   parent: [BasePDA, BaseSyndicateContraband]
   id: SyndiPDA
   name: syndicate PDA

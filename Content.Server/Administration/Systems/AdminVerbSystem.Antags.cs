@@ -53,6 +53,7 @@ using Content.Shared.Humanoid;
 using Content.Shared.Mind.Components;
 using Content.Shared.Roles;
 using Content.Shared.Verbs;
+using System.Linq;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
@@ -84,10 +85,24 @@ public sealed partial class AdminVerbSystem
     [ValidatePrototypeId<EntityPrototype>]
     private const string DefaultWizardRule = "Wizard";
 
+    [ValidatePrototypeId<EntityPrototype>]
+    private const string DefaultFugitiveRule = "FugitivesSpawn";
+
     [ValidatePrototypeId<StartingGearPrototype>]
     private const string PirateGearId = "PirateGear";
 
     private readonly EntProtoId _paradoxCloneRuleId = "ParadoxCloneSpawn";
+
+    private void ForceMakeSpecificAntag<TRule>(ICommonSession? player, string defaultRule, string prefRole) where TRule : Component
+    {
+        var rule = _antag.ForceGetGameRuleEnt<TRule>(defaultRule);
+        var definition = rule.Comp.Definitions.FirstOrDefault(def => def.PrefRoles.Contains(prefRole));
+
+        if (definition.PrefRoles == null || !definition.PrefRoles.Contains(prefRole))
+            return;
+
+        _antag.MakeAntag(rule, player, definition);
+    }
 
     // All antag verbs have names so invokeverb works.
     private void AddAntagVerbs(GetVerbsEvent<Verb> args)
@@ -221,6 +236,34 @@ public sealed partial class AdminVerbSystem
             Message = Loc.GetString("admin-verb-make-thief"),
         };
         args.Verbs.Add(thief);
+
+        Verb fugitive = new()
+        {
+            Text = Loc.GetString("admin-verb-text-make-fugitive"),
+            Category = VerbCategory.Antag,
+            Icon = new SpriteSpecifier.Rsi(new ResPath("/Textures/Interface/Misc/job_icons.rsi"), "Prisoner"),
+            Act = () =>
+            {
+                ForceMakeSpecificAntag<FugitiveRuleComponent>(targetPlayer, DefaultFugitiveRule, "Fugitive");
+            },
+            Impact = LogImpact.High,
+            Message = Loc.GetString("admin-verb-make-fugitive"),
+        };
+        args.Verbs.Add(fugitive);
+
+        Verb fugitiveHunter = new()
+        {
+            Text = Loc.GetString("admin-verb-text-make-fugitive-hunter"),
+            Category = VerbCategory.Antag,
+            Icon = new SpriteSpecifier.Rsi(new ResPath("/Textures/Objects/Misc/handcuffs.rsi"), "handcuff"),
+            Act = () =>
+            {
+                ForceMakeSpecificAntag<FugitiveRuleComponent>(targetPlayer, DefaultFugitiveRule, "FugitiveHunter");
+            },
+            Impact = LogImpact.High,
+            Message = Loc.GetString("admin-verb-make-fugitive-hunter"),
+        };
+        args.Verbs.Add(fugitiveHunter);
 
         // Goobstation - changelings
         Verb ling = new()
