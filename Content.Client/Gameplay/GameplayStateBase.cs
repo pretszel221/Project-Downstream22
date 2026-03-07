@@ -251,7 +251,7 @@ namespace Content.Client.Gameplay
                 var transformSystem = _entitySystemManager.GetEntitySystem<SharedTransformSystem>();
                 var mapSystem = _entitySystemManager.GetEntitySystem<MapSystem>();
 
-                if (mousePosWorld == MapCoordinates.Nullspace)
+                if (mousePosWorld.MapId == MapId.Nullspace || !_mapManager.MapExists(mousePosWorld.MapId))
                 {
                     coordinates = EntityCoordinates.Invalid;
                 }
