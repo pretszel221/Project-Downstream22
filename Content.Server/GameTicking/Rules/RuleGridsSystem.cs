@@ -58,12 +58,13 @@ public sealed class RuleGridsSystem : GameRuleSystem<RuleGridsComponent>
 
     private void OnSelectLocation(Entity<RuleGridsComponent> ent, ref AntagSelectLocationEvent args)
     {
+        var mapGrids = ent.Comp.MapGrids;
         var query = EntityQueryEnumerator<SpawnPointComponent, TransformComponent>();
         while (query.MoveNext(out var uid, out _, out var xform))
         {
             // Grids tracked by this rule may move across maps (e.g. shuttle FTL transitions).
             // Use grid ownership as the source of truth instead of the originally loaded map id.
-            if (xform.GridUid is not {} grid || !ent.Comp.MapGrids.Contains(grid))
+            if (xform.GridUid is not {} grid || !mapGrids.Contains(grid))
                 continue;
 
             if (_whitelist.IsWhitelistFail(ent.Comp.SpawnerWhitelist, uid))
