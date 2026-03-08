@@ -199,7 +199,6 @@
       - NewsReaderCartridge
       - NanoChatCartridge # DeltaV
       - SOSCartridge # Imp
-      - WordleCartridge
     cartridgeSlot:
       priority: -1
       name: device-pda-slot-component-slot-name-cartridge
@@ -274,7 +273,6 @@
     - WantedListCartridge
     - NanoChatCartridge # DeltaV
     - SOSCartridge # Imp
-    - WordleCartridge
 
 - type: entity
   parent: BasePDA
@@ -291,7 +289,6 @@
       - MedTekCartridge
       - NanoChatCartridge # DeltaV
       - SOSCartridge # Imp
-      - WordleCartridge
 
 - type: entity
   parent: BasePDA
@@ -608,7 +605,6 @@
       - MailMetricsCartridge
       - NanoChatCartridge # DeltaV
       - SOSCartridge # Imp
-      - WordleCartridge
 
 - type: entity
   parent: [BasePDA, BaseCargoContraband]
@@ -634,7 +630,6 @@
     - NewsReaderCartridge
     - NanoChatCartridge # DeltaV
     - SOSCartridge # Imp
-    - WordleCartridge
 
 - type: entity
   parent: [BasePDA, BaseCargoContraband]
@@ -664,7 +659,6 @@
       - AstroNavCartridge
       - NanoChatCartridge # DeltaV
       - SOSCartridge # Imp
-      - WordleCartridge
 
 - type: entity
   parent: [BasePDA, BaseCivilianContraband]
@@ -976,7 +970,6 @@
       - NewsReaderCartridge
       - NanoChatCartridge # DeltaV
       - SOSCartridge # Imp
-      - WordleCartridge
 
 - type: entity
   parent: [BasePDA, BaseScienceContraband]
@@ -1018,7 +1011,6 @@
       - NewsReaderCartridge
       - NanoChatCartridge # DeltaV
       - SOSCartridge # Imp
-      - WordleCartridge
 
 - type: entity
   parent: [BaseSecurityPDA, BaseCommandContraband]
@@ -1048,7 +1040,6 @@
     - LogProbeCartridge
     - NanoChatCartridge # DeltaV
     - SOSCartridge # Imp
-    - WordleCartridge
 
 - type: entity
   parent: [BaseSecurityPDA, BaseSecurityContraband]
@@ -1153,7 +1144,6 @@
       - AstroNavCartridge
       - NanoChatCartridge # DeltaV
       - SOSCartridge # Imp
-      - WordleCartridge
 
 - type: entity
   parent: BaseCentcomPDA
@@ -1190,7 +1180,6 @@
       - AstroNavCartridge
       # - NanoChatCartridge | Commented out so they can't communicate with the station directly
       # - SOSCartridge | CCIs won't just die, right?
-      - WordleCartridge
 
 - type: entity
   parent: CentcomOfficialPDA
@@ -1220,7 +1209,6 @@
       - AstroNavCartridge
       - NanoChatCartridge # DeltaV
       - SOSCartridge # Imp
-      - WordleCartridge
   - type: Tag #  Ignore Chameleon tags
     tags:
     - DoorBumpOpener
@@ -1497,7 +1485,6 @@
     - NewsReaderCartridge
     - NanoChatCartridge # DeltaV
     - SOSCartridge # Imp
-    - WordleCartridge
 
 - type: entity
   parent: [BasePDA, BaseCivilianContraband]
@@ -1563,7 +1550,6 @@
     - LogProbeCartridge
     - NanoChatCartridge # DeltaV
     - SOSCartridge # Imp
-    - WordleCartridge
 
 - type: entity
   parent: [BaseMedicalPDA, BaseSecurityContraband]
@@ -1594,7 +1580,6 @@
     - MedTekCartridge
     - NanoChatCartridge # DeltaV
     - SOSCartridge # Imp
-    - WordleCartridge
 
 - type: entity
   parent: ClownPDA
@@ -1667,7 +1652,6 @@
       - NewsReaderCartridge
       - NanoChatCartridge # DeltaV
       - SOSCartridge # Imp
-      - WordleCartridge
       - AstroNavCartridge #because there's no salv senior PDA YET, giving the cargonians astronav
 
 - type: entity

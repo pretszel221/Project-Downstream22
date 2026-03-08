@@ -79,7 +79,6 @@
     - WantedListCartridge
     - NanoChatCartridge
     - SOSCartridge
-    - WordleCartridge
 
 - type: entity
   parent: [BaseSecurityPDA, BaseSecurityContraband]
