@@ -91,4 +91,4 @@ If you find that your work is misattributed or someone elses work is misattribut
 
 
 ## Disclaimer
-AI was used for coding assistance to makeup for lack of familiarity with the codebase. No assets, textures, soundfiles, or artwork was created or modified by AI. This also includes SOP, guidebooks, writing and other apsects of the fork to further emphasize this point. This will be phased out/halted as proper collaborators and maintainers are acquired. This is mainly due to us wanting to create an experience but not having fully established coders/maintainers to make it happen. We want to be as transparent as possible as that's our motto for our server, so we are putting it on our git and in the server collaborator info as well! :)
+AI was used in early stages of server development to assist with porting and minor feature adjustments. AI is incapable of making or developing complex systems that would fundamentally change Space Station 14 and is terrible at its job. We place this disclaimer here to ensure transparency, and to inform any collaboraters. For the most part we will be sticking to pulling content from Upstream (GOOB/Funky).
