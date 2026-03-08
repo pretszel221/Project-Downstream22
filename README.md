@@ -29,15 +29,13 @@ SPDX-License-Identifier: MIT
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-This is a fork from the primary repo for Goob Station 14 which was then forked from Funky Station (now we are using it!). To prevent people forking RobustToolbox, a "content" pack is loaded by the client and server. Everything you find in here is on our server, further steps for booting up developer environments are listed further below.
+This is a fork from the primary repo for Goob Station 14 which was then forked from Funky Station. To prevent people forking RobustToolbox, a "content" pack is loaded by the client and server. Everything you find in here is on our server, further steps for booting up developer environments are listed further below.
 
 If you want to host or create content for SS14, for Goob Station, OR for Funky Station, go to the [Space Station 14 repository](https://github.com/space-wizards/space-station-14) / [Goob Station repository](https://github.com/Goob-Station/Goob-Station) or, [Funky Station Repository](https://github.com/funky-station/funky-station)
 
 ## Links
 
-- [Space Station 14 repository](https://github.com/space-wizards/space-station-14)
-- [Goob Station repository](https://github.com/Goob-Station/Goob-Station)
-- [Funky Station repository](https://github.com/funky-station/funky-station)
+- [Placeholder](https://github.com/space-wizards/space-station-14)
 
 ## Documentation/Wiki
 
@@ -90,5 +88,5 @@ Note that some assets are licensed under the non-commercial [CC-BY-NC-SA 3.0](ht
 If you find that your work is misattributed or someone elses work is misattributed, please create an issue on this repos GitHub page, or contact via the discord.
 
 
-## Disclaimer
-AI was used in early stages of server development to assist with porting and minor feature adjustments. AI is incapable of making or developing complex systems that would fundamentally change Space Station 14 and is terrible at its job. We place this disclaimer here to ensure transparency, and to inform any collaboraters. For the most part we will be sticking to pulling content from Upstream (GOOB/Funky).
+## AI Disclaimer
+AI was used in early stages of server development to assist with porting and minor feature adjustments. All of the changes implemented by AI were reviewed and fixed to ensure proper integration into the codebase. We place this disclaimer here to ensure transparency, and to give a proper notice on how some of the early changes were made. For the most part we will be sticking to pulling content from Upstream (GOOB/Funky).
