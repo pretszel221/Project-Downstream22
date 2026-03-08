@@ -108,7 +108,6 @@
     - WhitelistChameleonIdCard
   - type: StealTarget
     stealGroup: IDCard
-  - type: NanoChatCard # DeltaV
   - type: Utensil # Funky - for eating mystery scran
     types:
     - Fork
@@ -761,7 +760,6 @@
     heldPrefix: cc
   - type: PresetIdCard
     job: CentralCommandOfficial
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -780,7 +778,6 @@
       state: ERT-Leader
   - type: PresetIdCard
     job: ERTLeader
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -799,7 +796,6 @@
       state: ERT-Chaplain
   - type: PresetIdCard
     job: ERTChaplain
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -818,7 +814,6 @@
       state: ERT-Engineer
   - type: PresetIdCard
     job: ERTEngineer
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -837,7 +832,6 @@
       state: ERT-Janitor
   - type: PresetIdCard
     job: ERTJanitor
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -856,7 +850,6 @@
       state: ERT-Medic
   - type: PresetIdCard
     job: ERTMedical
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -875,7 +868,6 @@
       state: ERT-Security
   - type: PresetIdCard
     job: ERTSecurity
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -910,7 +902,6 @@
       state: DeathSquad
   - type: PresetIdCard
     job: DeathSquad
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -949,7 +940,6 @@
         type: AgentIDCardBoundUserInterface
       enum.ChameleonUiKey.Key:
         type: ChameleonBoundUserInterface
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -963,7 +953,6 @@
     - Maintenance
     - SyndicateAgent
     - NuclearOperative
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -1001,7 +990,6 @@
     tags:
     - NuclearOperative
     - SyndicateAgent
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -1023,7 +1011,6 @@
     tags:
     - NuclearOperative
     - SyndicateAgent
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -1160,7 +1147,6 @@
       state: CBURN
   - type: PresetIdCard
     job: CBURN
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -1180,7 +1166,6 @@
   - type: IdCard
     jobTitle: job-title-cluwne
   - type: Unremoveable
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -1273,7 +1258,6 @@
     - Wizard
     - External
     - Maintenance
-  - type: NanoChatCard # DeltaV
     listNumber: false
 
 - type: entity
@@ -1309,7 +1293,6 @@
   - type: Tag #  Ignore Chameleon tags
     tags:
     - DoorBumpOpener
-  - type: NanoChatCard # DeltaV
     notificationsMuted: true
     listNumber: false
   - type: AgentIDCard

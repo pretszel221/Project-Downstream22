@@ -8,7 +8,6 @@
 using Content.Server.Access.Components; // funkystation
 using Content.Server.CartridgeLoader.Cartridges; // funkystation
 using Content.Server.Forensics;
-using Content.Shared._DV.NanoChat; // funkystation
 using Content.Shared.Access.Components; // funkystation
 using Content.Shared.Access.Systems; // funkystation
 using Content.Shared.CartridgeLoader.Cartridges; // funkystation
@@ -46,7 +45,6 @@ public sealed partial class CloningSystem : EntitySystem
     [Dependency] private readonly PaperSystem _paper = default!;
     [Dependency] private readonly ItemSlotsSystem _itemSlots = default!; // funkystation
     [Dependency] private readonly SharedIdCardSystem _idCard = default!; // funkystation
-    [Dependency] private readonly SharedNanoChatSystem _nano = default!; // funkystation
 
     public override void Initialize()
     {
@@ -60,7 +58,6 @@ public sealed partial class CloningSystem : EntitySystem
         SubscribeLocalEvent<IdCardComponent, CloningItemEvent>(OnCloneIdCard); // funkystation
         SubscribeLocalEvent<AccessComponent, CloningItemEvent>(OnCloneAccess); // funkystation
         SubscribeLocalEvent<PdaComponent, CloningItemEvent>(OnClonePda); // funkystation
-        SubscribeLocalEvent<NanoChatCardComponent, CloningItemEvent>(OnCloneNanochat); // funkystation
     }
 
     private void OnCloneStack(Entity<StackComponent> ent, ref CloningItemEvent args)
@@ -184,28 +181,6 @@ public sealed partial class CloningSystem : EntitySystem
                         continue;
                     }
                 }
-            }
-        }
-    }
-
-    // funkystation
-    private void OnCloneNanochat(Entity<NanoChatCardComponent> ent, ref CloningItemEvent args)
-    {
-        // copy the NanoChat ID number and unlist the card to properly clone sent messages without revealing the Paradox Clone immediately in nanochat listing
-        if (ent.Comp.Number != null)
-            _nano.SetNumber(args.CloneUid, ent.Comp.Number.Value);
-        _nano.SetListNumber(args.CloneUid, false);
-
-        var oldRecipients = ent.Comp.Recipients;
-        var oldMessages = ent.Comp.Messages;
-        if (oldRecipients != null && oldMessages != null && TryComp<NanoChatCardComponent>(args.CloneUid, out var newCard))
-        {
-            foreach (var recipient in oldRecipients)
-            {
-                _nano.EnsureRecipientExists(args.CloneUid, recipient.Key, recipient.Value);
-                var toCopy = oldMessages.Where(m => m.Key == recipient.Key).First().Value;
-                foreach (var msg in toCopy)
-                    _nano.AddMessage(args.CloneUid, recipient.Key, msg);
             }
         }
     }

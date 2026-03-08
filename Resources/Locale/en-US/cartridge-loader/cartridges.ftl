@@ -45,6 +45,7 @@ astro-nav-program-name = AstroNav
 
 med-tek-program-name = MedTek
 
+wordle-program-name = Wordle
 
 # NanoTask cartridge
 

@@ -77,8 +77,8 @@
     - NanoTaskCartridge
     - NewsReaderCartridge
     - WantedListCartridge
-    - NanoChatCartridge
     - SOSCartridge
+    - WordleCartridge
 
 - type: entity
   parent: [BaseSecurityPDA, BaseSecurityContraband]
@@ -106,7 +106,6 @@
     - NewsReaderCartridge
     - WantedListCartridge
     - LogProbeCartridge
-    - NanoChatCartridge # DeltaV
     - SOSCartridge
 
 - type: entity
@@ -146,7 +145,6 @@
       - WantedListCartridge
       - LogProbeCartridge
       - AstroNavCartridge
-      - NanoChatCartridge # DeltaV
       - SOSCartridge
 
 - type: entity

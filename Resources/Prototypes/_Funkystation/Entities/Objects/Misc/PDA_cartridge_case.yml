@@ -38,5 +38,4 @@
     - id: WantedListCartridge
     - id: LogProbeCartridge
     - id: NetProbeCartridge
-    - id: NanoChatCartridge
     - id: MailMetricsCartridge
