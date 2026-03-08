@@ -77,6 +77,21 @@ public sealed class FugitiveRuleSystem : GameRuleSystem<FugitiveRuleComponent>
         ent.Comp.HunterShuttleGrids.UnionWith(args.Grids);
     }
 
+    protected override void Started(EntityUid uid, FugitiveRuleComponent component, GameRuleComponent gameRule, GameRuleStartedEvent args)
+	{
+		base.Started(uid, component, gameRule, args);
+
+		var query = EntityQueryEnumerator<FugitiveRuleComponent, GameRuleComponent>();
+		while (query.MoveNext(out var otherUid, out _, out _))
+		{
+			if (otherUid == uid)
+				continue;
+
+			GameTicker.EndGameRule(uid);
+			return;
+		}
+	}
+	
     private void OnAfterAntagSelected(Entity<FugitiveRuleComponent> ent, ref AfterAntagEntitySelectedEvent args)
     {
         if (args.Def.PrefRoles.Contains(ent.Comp.FugitivePrefRole))

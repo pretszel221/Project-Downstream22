@@ -876,7 +876,7 @@
       Death: 80
   - type: RuleGrids
   - type: LoadMapRule
-    gridPath: /Maps/Shuttles/ShuttleEvent/fugitive_ship.yml
+    gridPath: /Maps/Shuttles/fugitive_ship.yml
   - type: FugitiveRule
   - type: AntagLoadProfileRule
   - type: AntagSelection
@@ -907,6 +907,8 @@
       playerRatio: 15
       pickPlayer: false
       spawnerPrototype: SpawnPointGhostFugitiveHunter
+      briefing:
+        sound: "/Audio/Effects/alert.ogg"
       components:
       - type: RandomMetadata
         nameSegments:
@@ -933,7 +935,7 @@
       Death: 80
   - type: RuleGrids
   - type: LoadMapRule
-    gridPath: /Maps/Shuttles/ShuttleEvent/fugitive_cburn_ship.yml
+    gridPath: /Maps/Shuttles/fugitive_cburn_ship.yml
   - type: FugitiveRule
     fugitivePrefRole: InitialInfected
     fugitiveObjectivePrototype: InitialInfectedFugitiveObjective
@@ -984,6 +986,8 @@
       playerRatio: 15
       pickPlayer: false
       spawnerPrototype: SpawnPointGhostCBURNAgent
+      briefing:
+        sound: "/Audio/Effects/alert.ogg"
       components:
       - type: RandomMetadata
         nameSegments:

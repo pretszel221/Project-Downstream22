@@ -30,6 +30,12 @@ namespace Content.Server.StationEvents;
 
 public sealed class EventManagerSystem : EntitySystem
 {
+    private static readonly HashSet<string> ExclusiveFugitiveEvents = new()
+    {
+        "FugitivesSpawn",
+        "FugitivesCBURNOutbreakSpawn"
+    };
+
     [Dependency] private readonly IConfigurationManager _configurationManager = default!;
     [Dependency] private readonly IPlayerManager _playerManager = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
@@ -271,6 +277,15 @@ public sealed class EventManagerSystem : EntitySystem
     {
         if (GameTicker.IsGameRuleActive(prototype.ID))
             return false;
+
+        if (ExclusiveFugitiveEvents.Contains(prototype.ID))
+        {
+            foreach (var eventId in ExclusiveFugitiveEvents)
+            {
+                if (GameTicker.IsGameRuleActive(eventId) || GetOccurrences(eventId) > 0)
+                    return false;
+            }
+        }
 
         if (stationEvent.MaxOccurrences.HasValue && GetOccurrences(prototype) >= stationEvent.MaxOccurrences.Value)
         {

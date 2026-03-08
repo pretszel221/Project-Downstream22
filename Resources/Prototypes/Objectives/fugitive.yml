@@ -19,7 +19,7 @@
   parent: BaseObjective
   id: FugitiveHunterCaptureQuotaObjective
   name: These fugitive(s) are wanted and must be brought dead or alive.
-  description: These fugitive(s) are wanted and must be brought dead or alive.
+  description: Capture all assigned fugitive bounties, dead or alive.
   components:
   - type: Objective
     difficulty: 1.0
@@ -63,7 +63,7 @@
   parent: BaseObjective
   id: CBURNReclaimExperimentsObjective
   name: Reclaim each of the lab experiments.
-  description: Reclaim each of the lab experiments.
+  description: Reclaim all escaped lab experiments by capturing every target.
   components:
   - type: Objective
     difficulty: 1.0

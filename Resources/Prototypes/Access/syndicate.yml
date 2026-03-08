@@ -13,3 +13,7 @@
 - type: accessLevel
   id: SyndicateAgent
   name: id-card-access-level-syndicate-agent
+  
+  - type: accessLevel
+  id: FugitiveHunter
+  name: id-card-access-level-fugitive-hunter

@@ -125,6 +125,9 @@
     - WeaponShotgunDoubleBarreled
     - BoxShotgunIncendiary
     - BoxShotgunIncendiary
+    - BoxShotgunIncendiary
+    - BoxShotgunIncendiary
+    - MagazineShotgunIncendiary
     - MagazineShotgunIncendiary
     - GrenadeFlashBang
     - PillAmbuzolPlus
@@ -135,7 +138,7 @@
 - type: startingGear
   id: CBURNEscapedExperimentGear
   equipment:
-    jumpsuit: ClothingUniformJumpsuitPassenger
+    jumpsuit: ClothingUniformJumpsuitColorGrey
     shoes: ClothingShoesColorBlack
     gloves: ClothingHandsGlovesArcGloves
     back: ToolboxMechanicalFilled
