@@ -1489,6 +1489,7 @@
   name: loadout-group-atmospheric-technician-outerclothing
   minLimit: 0
   loadouts:
+  - AtmosphericTechnicianWintercoat
 
 - type: loadoutGroup
   id: AtmosphericTechnicianBelt
