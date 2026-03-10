@@ -74,7 +74,7 @@
     contents:
       - id: FlashlightSeclite
       - id: WeaponEnergyShotgun
-#      - id: WeaponDisabler # Funky
+      - id: WeaponDisabler # Funky
       - id: ClothingBeltSecurityFilled
       - id: Flash
       - id: ClothingEyesGlassesSecurity
@@ -107,7 +107,7 @@
     contents:
       - id: FlashlightSeclite
       - id: WeaponEnergyShotgun # Goobstation
-#      - id: WeaponDisabler # Funky
+      - id: WeaponDisabler # Funky
       - id: ClothingBeltSecurityFilled
       - id: Flash
       - id: ClothingEyesGlassesSecurity
@@ -138,7 +138,7 @@
     contents:
       - id: FlashlightSeclite
         prob: 0.8
-#      - id: WeaponDisabler # Funky
+      - id: WeaponDisabler # Funky
       - id: ClothingUniformJumpsuitSecGrey
         prob: 0.3
       - id: ClothingHeadHelmetBasic

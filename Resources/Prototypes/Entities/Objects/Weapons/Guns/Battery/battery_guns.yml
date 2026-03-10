@@ -755,7 +755,7 @@
       - Belt
   - type: ProjectileBatteryAmmoProvider
     proto: BulletDisabler
-    fireCost: 50
+    fireCost: 100
   - type: GuideHelp
     guides:
     - Security
