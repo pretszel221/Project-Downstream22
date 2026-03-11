@@ -19,7 +19,6 @@
   text: "/ServerInfo/Funkystation/Guidebook/SOP/SOP101.xml"
   children:
   - CommandSOP
-  - CentralCommandSOP
   - LegalSOP
   - ServiceSOP
   - SecuritySOP
@@ -31,7 +30,7 @@
 
 - type: guideEntry
   id: LegalSOP
-  name: LegalSOP
+  name: Legal SOP
   text: "/ServerInfo/Funkystation/Guidebook/Legal/LegalSOP.xml"
 
 # ALERT LEVELS
@@ -106,7 +105,6 @@
   name: guide-entry-command-sop
   text: "/ServerInfo/Funkystation/Guidebook/Command/GeneralCommandSOP.xml"
   children:
-  - CommandTrainingManual
   - OrderOfSuccession
   - CaptainSOP
 
@@ -120,31 +118,7 @@
   name: guide-entry-order-of-succession
   text: "/ServerInfo/Funkystation/Guidebook/Command/OrderOfSuccession.xml"
 
-# CC
 
-- type: guideEntry
-  id: CentralCommandSOP
-  name: guide-entry-central-command-sop
-  text: "/ServerInfo/Funkystation/Guidebook/CentralCommand/CCSOP.xml"
-  children:
-  - IAASOP
-  - NTRSOP
-  - MagistrateSOP
-
-- type: guideEntry
-  id: IAASOP
-  name: guide-entry-iaa-sop
-  text: "/ServerInfo/Funkystation/Guidebook/CentralCommand/IAASOP.xml"
-
-- type: guideEntry
-  id: NTRSOP
-  name: guide-entry-ntr-sop
-  text: "/ServerInfo/Funkystation/Guidebook/CentralCommand/NTRSOP.xml"
-
-- type: guideEntry
-  id: MagistrateSOP
-  name: guide-entry-magistrate-sop
-  text: "/ServerInfo/Funkystation/Guidebook/CentralCommand/MagistrateSOP.xml"
 
 # SERVICE
 
@@ -250,7 +224,7 @@
   children:
   - RDSOP
   - ScientistSOP
-  - RoboticistSOP
+
 
 - type: guideEntry
   id: RDSOP
@@ -262,10 +236,6 @@
   name: guide-entry-scientist-sop
   text: "/ServerInfo/Funkystation/Guidebook/Science/ScientistSOP.xml"
 
-- type: guideEntry
-  id: RoboticistSOP
-  name: guide-entry-roboticist-sop
-  text: "/ServerInfo/Funkystation/Guidebook/Science/RoboticistSOP.xml"
 
 # MED
 
@@ -314,6 +284,7 @@
   children:
   - CESOP
   - StationEngineerSOP
+  - AtmosphericSOP
 
 - type: guideEntry
   id: CESOP
@@ -324,6 +295,11 @@
   id: StationEngineerSOP
   name: guide-entry-stationengineer-sop
   text: "/ServerInfo/Funkystation/Guidebook/Engineering/StationEngineerSOP.xml"
+
+- type: guideEntry
+  id: AtmosphericSOP
+  name: guide-entry-atmospheric-sop
+  text: "/ServerInfo/Funkystation/Guidebook/Engineering/AtmosphericSOP.xml"
 
 # CARGO
 
